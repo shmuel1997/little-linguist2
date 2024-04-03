@@ -1,0 +1,12 @@
+.cards {
+    width: 130px;
+    min-height:130px;
+    margin: 8px;
+    display: flex;
+  }
+  .selected-word{
+    color: blue;
+  }
+  .disabled-word{
+    color: gray;
+  }

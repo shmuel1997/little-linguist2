@@ -1,0 +1,12 @@
+<div mat-dialog-content>
+    <p *ngIf="isSuccess">
+        Great job!
+    </p>
+    <p *ngIf="!isSuccess">
+        Incorrect ,Give it another try
+    </p>
+</div>
+<div mat-dialog-actions>
+    <button *ngIf="isSuccess" cdkFocusInitial color="primary" mat-button [mat-dialog-close]="true">Continue</button>
+    <button *ngIf="!isSuccess" cdkFocusInitial color="primary" mat-button [mat-dialog-close]="true">Got it</button>
+</div>
