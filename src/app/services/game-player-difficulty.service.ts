@@ -5,7 +5,8 @@ import { GamePlayed } from '../../shared/model/gamePlayed';
   providedIn: 'root'
 })
 export class GamePlayerDifficultyService {
-  private readonly   GAME_PLAYED_KEY = 'GamesPlayed';
+  private readonly  GAME_PLAYED_KEY = 'GamesPlayed';
+  private readonly NEXT_ID_KEY = 'nextIdGame';
 
   constructor() { }
 
@@ -22,11 +23,20 @@ export class GamePlayerDifficultyService {
     return Array.from(this.getGamesPlayed().values());
 
   }
+  private getNextId() : number {
+    let nextIdString = localStorage.getItem(this.NEXT_ID_KEY); 
+    return nextIdString ? parseInt(nextIdString) : 0;
+  }
+  private setNextId(id : number) : void {
+    localStorage.setItem(this.NEXT_ID_KEY, id.toString());
+  }
   addGamePlayed(gamePlayed:GamePlayed){
+    gamePlayed.idGame = this.getNextId();
     let gamesPlayedMap = this.getGamesPlayed();
     gamesPlayedMap.set(gamePlayed.idGame, gamePlayed);
+    this.setGamesPlayed(gamesPlayedMap);
+    this.setNextId(++gamePlayed.idGame);
 
-    this.setGamesPlayed(gamesPlayedMap)
   }
   setGamesPlayed(gamesPlayedMap: Map<number, GamePlayed>) {
     localStorage.setItem(this.GAME_PLAYED_KEY, JSON.stringify(Array.from(gamesPlayedMap)));

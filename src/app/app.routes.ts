@@ -17,7 +17,7 @@ export const routes: Routes = [
     {path: "selectGameComponent", component: SelectGameComponent},
     {path: "matchingGameComponent/:idCategory", component: MatchingGameComponent},
     {path: "helpGameComponent", component: HelpGameComponent},
-    {path: "MixedWords/:id", component:MixedWordsComponent}
+    {path: "MixedWords/:idCategory", component:MixedWordsComponent}
 
 
 ];

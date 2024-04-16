@@ -1,0 +1,14 @@
+.mix-game{
+    display: flex;
+    flex-direction: column;
+}
+button{
+    margin: 2px;
+}
+li{
+    list-style-type: none;
+    
+}
+li>*{
+    margin: 2px;
+}

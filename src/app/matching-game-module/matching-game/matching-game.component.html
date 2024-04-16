@@ -1,56 +1,38 @@
-
-<div  *ngIf="!endGame" class="matching-game">
+<mat-icon (click)="exit()">exit_to_app</mat-icon>
+<div *ngIf="!endGame" class="error-word">
+  <h1>Matching Game -{{category?.name}}</h1>
+  <div *ngIf="errorWords">
+    <p>{{errorWords}}</p>
+  </div>
+  <div class="matching-game" *ngIf="!errorWords">
     <div>
-      <app-display-word [word]="word.origin" [wordStatus]="wordStatusOrigin[index]" (click)="selectOriginWord(index)" *ngFor="let word of wordsToDisplay; let index=index"></app-display-word>
-       <!--  <mat-card   class="cards">
-         <mat-card-content>
-             <div >
-                 {{ word?.origin }}
-                 </div>
-         </mat-card-content>    
-       </mat-card>  -->
-     </div>    
-       <div>
-        <app-display-word [word]="word.target" [wordStatus]="wordStatusTarget[index]" (click)="selectTargetWord(index)" *ngFor="let word of wordsToDisplayTarget; let index=index"></app-display-word>
+      <app-display-word [word]="word.origin" [wordStatus]="wordStatusOrigin[index]" (click)="selectOriginWord(index)"
+        *ngFor="let word of wordsToDisplay; let index=index"></app-display-word>
+    </div>
+    <div>
+      <app-display-word [word]="word.target" [wordStatus]="wordStatusTarget[index]" (click)="selectTargetWord(index)"
+        *ngFor="let word of wordsToDisplayTarget; let index=index"></app-display-word>
+    </div>
+  </div>
 
-      <!--  <mat-card  (click)="selectTargetWord(index)" *ngFor="let word of wordsToDisplayTarget let index=index" class="cards">
-         <mat-card-content>
-             <div >
-                 {{ word?.target }}
-                 </div>
-         </mat-card-content>    
-       </mat-card>  --> 
-       </div>
 </div>
 <div *ngIf="endGame">
-<h4>{{category?.name}} results</h4>
-<p>points: {{gamePoints}}</p>
-<p>amount of attempts: {{tryCount}}</p>
+  <h1>{{category?.name}} results</h1>
+  <p>points: {{gamePoints}}</p>
+  <p>amount of attempts: {{tryCount}}</p>
+  <table mat-table [dataSource]="wordsToDisplay" class="mat-elevation-z8">
+    <!-- Name Column -->
+    <ng-container matColumnDef="OriginWord">
+      <th mat-header-cell *matHeaderCellDef> origin word </th>
+      <td mat-cell *matCellDef="let element"> {{element.origin}} </td>
+    </ng-container>
 
-<table mat-table [dataSource]="wordsToDisplay" class="mat-elevation-z8">
-  <!-- Name Column -->
-  <ng-container matColumnDef="OriginWord">
-    <th mat-header-cell *matHeaderCellDef> origin word </th>
-    <td mat-cell *matCellDef="let element"> {{element.origin}} </td>
-  </ng-container>
-
-  <!-- Weight Column -->
-  <ng-container matColumnDef="TargetWord">
-    <th mat-header-cell *matHeaderCellDef> target word </th>
-    <td mat-cell *matCellDef="let element"> {{element.target}} </td>
-  </ng-container>
-
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-
-
-
-
+    <!-- Weight Column -->
+    <ng-container matColumnDef="TargetWord">
+      <th mat-header-cell *matHeaderCellDef> target word </th>
+      <td mat-cell *matCellDef="let element"> {{element.target}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>
-
-
-
-

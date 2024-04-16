@@ -21,15 +21,11 @@ import { RouterModule } from '@angular/router';
   styleUrl: './select-game.component.css'
 })
 export class SelectGameComponent {
-
-
   gamesProfile: GameProfile[] = [];
   selectedValue?: GameProfile;
   constructor(
     private gameManagerService: GameManagerService, 
     @Inject (MAT_DIALOG_DATA) public categoryId:number) {
-
-
   }
   ngOnInit() {
     this.gamesProfile = this.gameManagerService.gamesProfile;

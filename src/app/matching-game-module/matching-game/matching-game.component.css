@@ -1,11 +1,15 @@
 .cards {
-    width: 130px;
-    min-height:130px;
-    margin: 8px;
-    display: flex;
-  }
+  width: 130px;
+  min-height: 130px;
+  margin: 8px;
+  display: flex;
+}
 
-  .matching-game{
-    display: flex;
-    justify-content: space-around;
-  }
+.matching-game {
+  display: flex;
+  justify-content: space-around;
+}
+.error-word {
+  display: flex;
+  flex-direction: column;
+}

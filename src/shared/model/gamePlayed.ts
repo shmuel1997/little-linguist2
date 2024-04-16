@@ -1,6 +1,6 @@
 export class GamePlayed {
     idCategory: number;
-    idGame: number;
+    idGame?: number;
     date: Date;
     numOfPoints: number;
 
