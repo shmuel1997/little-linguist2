@@ -1,5 +1,5 @@
 <h1>You're learning:</h1>
-<div class="dashbord">
+<div class="dashboard">
  <mat-card class="cards">
     <mat-card-content>
         <p>
@@ -8,8 +8,8 @@
             Games
         </p>
     </mat-card-content>
-</mat-card>
-<mat-card class="cards">
+ </mat-card>
+ <mat-card class="cards">
     <mat-card-content>
         <p>
             {{ totalNumOfPoints }}
@@ -17,5 +17,23 @@
             Points
         </p>
     </mat-card-content>
-</mat-card>   
+ </mat-card>
+ <mat-card class="cards">
+    <mat-card-content>
+        <p>
+            {{ numberOfLearnedCategories }}
+            <br />
+            Learned Categories
+        </p>
+    </mat-card-content>
+ </mat-card>
+ <mat-card class="cards">
+    <mat-card-content>
+        <p>
+            {{ numberOfUnlearnedCategories }}
+            <br />
+            Unlearned Categories
+        </p>
+    </mat-card-content>
+ </mat-card>
 </div>

@@ -4,7 +4,7 @@
         <div>
             <h1>Mixed Letters - {{category?.name}}</h1>
             <div class="mix-game">
-                <span>{{this.words?.[this.index]?.target}}</span>
+                <span>{{words?.[index]?.target}}</span>
                 <span>{{mixWord}}</span>
 
                 <div>
@@ -18,14 +18,14 @@
 
         <button type="button" mat-raised-button color="primary" (click)="reset()">
             Reset</button>
-        <button type="submit" mat-raised-button color="primary" [disabled]="mixGameForm.invalid ||mixGameForm.pristine">
+        <button type="submit" mat-raised-button color="primary" [disabled]="mixGameForm.invalid || mixGameForm.pristine">
             Submit
         </button>
     </form>
-    <mat-progress-bar mode="determinate" [value]="moneSuccsess*10"></mat-progress-bar>
+    <mat-progress-bar mode="determinate" [value]="calculateProgress()"></mat-progress-bar>
 </div>
 <div *ngIf="endGame">
-    <h1>Mixed Letters - {{category?.name}} -Results</h1>
+    <h1>Mixed Letters - {{category?.name}} - Results</h1>
     <p>points: {{gamePoints}}</p>
     <p>amount of attempts: {{tryCount}}</p>
     <ul>
@@ -34,6 +34,10 @@
             <span>{{word.target}}</span>
             <mat-icon *ngIf="word.origin==word.guess">check</mat-icon>
             <mat-icon *ngIf="word.origin!=word.guess">close</mat-icon>
-        </li>
+
+        </li>            
+        <button mat-raised-button (click)="startNewGame()">Start New Game</button>
+
     </ul>
 </div>
+

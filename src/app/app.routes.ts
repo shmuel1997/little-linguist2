@@ -7,6 +7,7 @@ import { MatchingGameComponent } from './matching-game-module/matching-game/matc
 import { HelpGameComponent } from './help-game/help-game.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MixedWordsComponent } from './mixed-words/mixed-words.component';
+import { WordSorterGameComponent } from './word-sorter-game/word-sorter-game.component';
 
 export const routes: Routes = [
     {path:"",component:DashboardComponent },
@@ -17,7 +18,8 @@ export const routes: Routes = [
     {path: "selectGameComponent", component: SelectGameComponent},
     {path: "matchingGameComponent/:idCategory", component: MatchingGameComponent},
     {path: "helpGameComponent", component: HelpGameComponent},
-    {path: "MixedWords/:idCategory", component:MixedWordsComponent}
+    {path: "MixedWords/:idCategory", component:MixedWordsComponent},
+    {path: "WordSorterGameComponent", component:WordSorterGameComponent}
 
 
 ];

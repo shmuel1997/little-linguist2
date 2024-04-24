@@ -38,15 +38,17 @@ export class MixedWordsComponent {
   index = -1;
   mixWord: string = '';
   guess: string = '';
-  moneSuccsess = 0;
+  numSuccess = 0;
   endGame = false;
   tryCount: number = 0;
   gamePoints: number = 16;
+
   constructor(
     private categoryService: CategoriesService,
     private dialogService: MatDialog,
     private gamePlayerDifficultyService: GamePlayerDifficultyService
   ) {}
+
   ngOnInit() {
     this.category = this.categoryService.get(parseInt(this.idCategory));
     this.words = this.category?.words;
@@ -54,46 +56,60 @@ export class MixedWordsComponent {
   }
 
   nextWord() {
-    this.index++;
-    this.mixWord = this.words
-      ? [...this.words[this.index].origin]
-          .sort(() => Math.random() - 0.5)
-          .join('')
-      : '';
+    if (this.words && this.index < this.words.length - 1) {
+      this.index++;
+      this.mixWord = [...this.words[this.index].origin]
+        .sort(() => Math.random() - 0.5)
+        .join('');
+    }
   }
 
   reset() {
     this.guess = '';
   }
+
   submit() {
     this.tryCount++;
-    let isSuccess = false;
-    this.words ? (this.words[this.index].guess = this.guess) : '';
-    if (this.guess == this.words?.[this.index]?.origin) {
-      this.moneSuccsess++;
-      isSuccess = true;
-    } else this.gamePoints = this.gamePoints - 2;
-    let dialogRef = this.dialogService.open(DialogMatchGameComponent, {
-      data: isSuccess,
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (this.index + 1 == this.words?.length) {
-          let game: GamePlayed = {
-            date: new Date(),
-            idCategory: parseInt(this.idCategory),
-            numOfPoints: this.gamePoints,
-          };
-          this.gamePlayerDifficultyService.addGamePlayed(game);
-          this.endGame = true;
-        } else {
-          this.guess = '';
-          this.nextWord();
-        }
-      }
-    });
+    const isSuccess = this.guess === this.words?.[this.index]?.origin;
+    if (isSuccess) {
+      this.numSuccess++;
+      this.dialogService.open(DialogMatchGameComponent, {
+        data: { success: true },
+      });
+    } else {
+      this.gamePoints -= 2;
+      this.dialogService.open(DialogMatchGameComponent, {
+        data: { success: false },
+      });
+    }
+
+    if (this.index + 1 === this.words?.length) {
+      let game: GamePlayed = {
+        date: new Date(),
+        idCategory: parseInt(this.idCategory),
+        numOfPoints: this.gamePoints,
+      };
+      this.gamePlayerDifficultyService.addGamePlayed(game);
+      this.endGame = true;
+    } else {
+      this.reset();
+      this.nextWord();
+    }
   }
+
   exit() {
     this.dialogService.open(ExitGameComponent);
+  }
+
+  calculateProgress(): number {
+    return this.words ? (this.numSuccess / this.words.length) * 100 : 0;
+  }
+  startNewGame() {
+    this.index = -1;
+    this.numSuccess = 0;
+    this.endGame = false;
+    this.tryCount = 0;
+    this.gamePoints = 16;
+    this.nextWord(); // Optionally, fetch new words or shuffle existing ones here
   }
 }

@@ -42,4 +42,16 @@ export class GamePlayerDifficultyService {
     localStorage.setItem(this.GAME_PLAYED_KEY, JSON.stringify(Array.from(gamesPlayedMap)));
 
   }
+  getNumberOfLearnedCategories(): number {
+    const gamesPlayedArray = Array.from(this.getGamesPlayed().values());
+    const learnedCategoryIds = new Set(gamesPlayedArray.map(game => game.idCategory));
+    return learnedCategoryIds.size;
+  }
+  
+  getNumberOfUnlearnedCategories(totalCategories: number): number {
+    const gamesPlayedArray = Array.from(this.getGamesPlayed().values());
+    const learnedCategoryIds = new Set(gamesPlayedArray.map(game => game.idCategory));
+    return totalCategories - learnedCategoryIds.size;
+  }
+  
 }
