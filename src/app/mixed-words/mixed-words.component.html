@@ -32,8 +32,8 @@
         <li *ngFor="let word of words">
             <span>{{word.origin}}</span>
             <span>{{word.target}}</span>
-            <mat-icon *ngIf="word.origin==word.guess">check</mat-icon>
-            <mat-icon *ngIf="word.origin!=word.guess">close</mat-icon>
+            <mat-icon *ngIf="word.origin===word.guess">check</mat-icon>
+            <mat-icon *ngIf="word.origin!==word.guess">close</mat-icon>
 
         </li>            
         <button mat-raised-button (click)="startNewGame()">Start New Game</button>

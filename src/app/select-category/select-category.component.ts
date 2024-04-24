@@ -4,7 +4,7 @@ import { CategoriesService } from '../services/categories.service';
 import { MatCardModule } from '@angular/material/card';
 import { NgForOf, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { Route, Router, RouterModule } from '@angular/router';
+import {  Router, RouterModule } from '@angular/router';
 import { SelectGameComponent } from '../select-game/select-game.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,12 +32,10 @@ constructor(private categoriesService:CategoriesService, private dialogService:M
 }
 
 
-openSelectGame(category:Category){
-  let dialogRef = this.dialogService.open(SelectGameComponent,{data: category.id});
-
-
-
+openSelectGame(category: Category) {
+  this.dialogService.open(SelectGameComponent, {data: category.id});
 }
+// eslint-disable-next-line @angular-eslint/use-lifecycle-interface
 ngOnInit(){
   this.categories=this.categoriesService.list();
 }

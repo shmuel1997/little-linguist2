@@ -27,6 +27,7 @@ export class SelectGameComponent {
     private gameManagerService: GameManagerService, 
     @Inject (MAT_DIALOG_DATA) public categoryId:number) {
   }
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     this.gamesProfile = this.gameManagerService.gamesProfile;
     this.selectedValue = this.gamesProfile[0];

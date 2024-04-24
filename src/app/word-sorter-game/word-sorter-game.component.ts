@@ -12,9 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { GamePlayed } from '../../shared/model/gamePlayed';
-import { TranslatedWord } from '../../shared/model/translated-word';
-import { GamePlayerDifficultyService } from '../services/game-player-difficulty.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({

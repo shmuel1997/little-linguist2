@@ -39,6 +39,7 @@ export class MatchingGameComponent {
     private dialogService: MatDialog,
     private gamePlayerDifficultyService: GamePlayerDifficultyService
   ) {}
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     this.category = this.categoryService.get(parseInt(this.idCategory));
     this.words = this.category?.words;
@@ -46,7 +47,7 @@ export class MatchingGameComponent {
       this.errorWords =
         'To use this game, a category must contain a minimum of five words';
     else this.errorWords = undefined;
-    let wordsSort = this.words
+    const wordsSort = this.words
       ? this.words?.sort(() => Math.random() - 0.5)
       : [];
     this.wordsToDisplay = wordsSort?.slice(0, 5);
@@ -72,7 +73,7 @@ export class MatchingGameComponent {
   selectOriginWord(index: number) {
     this.resetWordStatusOrigin();
     this.wordStatusOrigin[index] = WordStatus.selected;
-    let indexTarget = this.checkSelected('origin');
+    const indexTarget = this.checkSelected('origin');
     if (indexTarget > -1) {
       this.checkMatch(index, indexTarget);
     }
@@ -80,7 +81,7 @@ export class MatchingGameComponent {
   selectTargetWord(index: number) {
     this.resetWordStatusTarget();
     this.wordStatusTarget[index] = WordStatus.selected;
-    let indexOrigin = this.checkSelected('target');
+    const indexOrigin = this.checkSelected('target');
     if (indexOrigin > -1) {
       this.checkMatch(indexOrigin, index);
     }
@@ -99,7 +100,7 @@ export class MatchingGameComponent {
       isSuccess = false;
     }
 
-    let dialogRef = this.dialogService.open(DialogMatchGameComponent, {
+    const dialogRef = this.dialogService.open(DialogMatchGameComponent, {
       data: isSuccess,
     });
 
@@ -123,7 +124,7 @@ export class MatchingGameComponent {
       if (this.wordStatusOrigin[i] != WordStatus.disabled) this.endGame = false;
     }
     if (this.endGame) {
-      let game: GamePlayed = {
+      const game: GamePlayed = {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,

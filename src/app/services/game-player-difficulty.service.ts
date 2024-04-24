@@ -11,7 +11,7 @@ export class GamePlayerDifficultyService {
   constructor() { }
 
   private getGamesPlayed() : Map<number, GamePlayed>{
-    let gamesPlayedString = localStorage.getItem(this.GAME_PLAYED_KEY);
+    const gamesPlayedString = localStorage.getItem(this.GAME_PLAYED_KEY);
 
     if (!gamesPlayedString) {
       return new Map<number, GamePlayed>();
@@ -24,7 +24,7 @@ export class GamePlayerDifficultyService {
 
   }
   private getNextId() : number {
-    let nextIdString = localStorage.getItem(this.NEXT_ID_KEY); 
+    const nextIdString = localStorage.getItem(this.NEXT_ID_KEY); 
     return nextIdString ? parseInt(nextIdString) : 0;
   }
   private setNextId(id : number) : void {
@@ -32,7 +32,7 @@ export class GamePlayerDifficultyService {
   }
   addGamePlayed(gamePlayed:GamePlayed){
     gamePlayed.idGame = this.getNextId();
-    let gamesPlayedMap = this.getGamesPlayed();
+    const gamesPlayedMap = this.getGamesPlayed();
     gamesPlayedMap.set(gamePlayed.idGame, gamePlayed);
     this.setGamesPlayed(gamesPlayedMap);
     this.setNextId(++gamePlayed.idGame);

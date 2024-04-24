@@ -49,6 +49,7 @@ export class MixedWordsComponent {
     private gamePlayerDifficultyService: GamePlayerDifficultyService
   ) {}
 
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     this.category = this.categoryService.get(parseInt(this.idCategory));
     this.words = this.category?.words;
@@ -84,7 +85,7 @@ export class MixedWordsComponent {
     }
 
     if (this.index + 1 === this.words?.length) {
-      let game: GamePlayed = {
+      const game: GamePlayed = {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
