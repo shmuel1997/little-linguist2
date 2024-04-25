@@ -12,11 +12,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { ExitGameComponent } from '../../exit-game/exit-game.component';
 import { GamePlayed } from '../../../shared/model/gamePlayed';
 import { GamePlayerDifficultyService } from '../../services/game-player-difficulty.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-matching-game',
   standalone: true,
-  imports: [MatIconModule, NgForOf, MatTableModule, NgIf, DisplayWordComponent],
+  imports: [MatIconModule, NgForOf, MatTableModule, NgIf, DisplayWordComponent, MatButtonModule],
   templateUrl: './matching-game.component.html',
   styleUrl: './matching-game.component.css',
 })
@@ -41,6 +42,7 @@ export class MatchingGameComponent {
   ) {}
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
+    this.startNewGame();
     this.category = this.categoryService.get(parseInt(this.idCategory));
     this.words = this.category?.words;
     if (this.words && this.words?.length < 5)
@@ -71,6 +73,12 @@ export class MatchingGameComponent {
   }
 
   selectOriginWord(index: number) {
+    // אם המילה נבחרה כבר והיא מושבתת, אל תעשה כלום
+    if (this.wordStatusOrigin[index] === WordStatus.disabled) {
+      return;
+    }
+  
+    // אם המילה עדיין לא נבחרה, המשך עם הלוגיקה של בדיקת ההתאמה
     this.resetWordStatusOrigin();
     this.wordStatusOrigin[index] = WordStatus.selected;
     const indexTarget = this.checkSelected('origin');
@@ -78,7 +86,14 @@ export class MatchingGameComponent {
       this.checkMatch(index, indexTarget);
     }
   }
+  
   selectTargetWord(index: number) {
+    // אם המילה נבחרה כבר והיא מושבתת, אל תעשה כלום
+    if (this.wordStatusTarget[index] === WordStatus.disabled) {
+      return;
+    }
+  
+    // אם המילה עדיין לא נבחרה, המשך עם הלוגיקה של בדיקת ההתאמה
     this.resetWordStatusTarget();
     this.wordStatusTarget[index] = WordStatus.selected;
     const indexOrigin = this.checkSelected('target');
@@ -86,6 +101,7 @@ export class MatchingGameComponent {
       this.checkMatch(indexOrigin, index);
     }
   }
+  
 
   checkMatch(indexOrigin: number, indexTarget: number) {
     this.tryCount++;
@@ -144,5 +160,22 @@ export class MatchingGameComponent {
   }
   exit() {
     this.dialogService.open(ExitGameComponent);
+  }
+  startNewGame() {
+    this.category = this.categoryService.get(parseInt(this.idCategory));
+    this.words = this.category?.words;
+    if (this.words && this.words.length < 5) {
+      this.errorWords = 'To use this game, a category must contain a minimum of five words';
+    } else {
+      this.errorWords = undefined;
+      const wordsSort = this.words ? [...this.words].sort(() => Math.random() - 0.5) : [];
+      this.wordsToDisplay = wordsSort.slice(0, 5);
+      this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(() => Math.random() - 0.5);
+      this.wordStatusOrigin.fill(WordStatus.normal); // אפס את המערך
+      this.wordStatusTarget.fill(WordStatus.normal); // אפס את המערך
+      this.endGame = false;
+      this.tryCount = 0;
+      this.gamePoints = 16;
+    }
   }
 }
