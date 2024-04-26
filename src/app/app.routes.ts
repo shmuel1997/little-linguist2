@@ -19,7 +19,7 @@ export const routes: Routes = [
     {path: "matchingGameComponent/:idCategory", component: MatchingGameComponent},
     {path: "helpGameComponent", component: HelpGameComponent},
     {path: "MixedWords/:idCategory", component:MixedWordsComponent},
-    {path: "WordSorterGameComponent", component:WordSorterGameComponent}
+    {path: "WordSorterGameComponent/:idCategory", component:WordSorterGameComponent}
 
 
 ];

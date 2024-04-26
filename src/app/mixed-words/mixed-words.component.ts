@@ -111,6 +111,6 @@ export class MixedWordsComponent {
     this.endGame = false;
     this.tryCount = 0;
     this.gamePoints = 16;
-    this.nextWord(); // Optionally, fetch new words or shuffle existing ones here
+    this.nextWord();
   }
 }
