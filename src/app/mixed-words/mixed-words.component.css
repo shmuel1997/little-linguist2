@@ -1,14 +1,60 @@
-.mix-game{
+h1 {
+    text-align: center;
+}
+.mix-game {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
 }
-button{
-    margin: 2px;
+
+.mix-game span {
+    margin: 5px;
+    font-size: 24px;
 }
-li{
+
+.mix-game input {
+    width: 200px;
+}
+
+.results {
+    margin-top: 20px;
+}
+
+.results p {
+    margin-bottom: 10px;
+}
+
+.results ul {
     list-style-type: none;
-    
+    padding: 0;
 }
-li>*{
-    margin: 2px;
+
+.results li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.results li span {
+    margin-right: 10px;
+}
+
+.results mat-icon {
+    margin-right: 5px;
+    font-size: 24px;
+    color: green; 
+}
+
+.results mat-icon.close {
+    color: red; 
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+    margin-top: 10px; 
 }

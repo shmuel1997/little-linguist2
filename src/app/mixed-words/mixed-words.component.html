@@ -2,10 +2,10 @@
     <mat-icon (click)="exit()">exit_to_app</mat-icon>
     <form #mixGameForm="ngForm" (ngSubmit)="submit()">
         <div>
-            <h1>Mixed Letters - {{category?.name}}</h1>
+            <h1>Mixed Letters - {{ category?.['name'] }}</h1>
             <div class="mix-game">
-                <span>{{words?.[index]?.target}}</span>
-                <span>{{mixWord}}</span>
+                <span>{{ words?.[index]?.['target'] }}</span>
+                <span>{{ mixWord }}</span>
 
                 <div>
                     <mat-form-field>
@@ -21,23 +21,20 @@
         <button type="submit" mat-raised-button color="primary" [disabled]="mixGameForm.invalid || mixGameForm.pristine">
             Submit
         </button>
-    </form>
+    </form><br><br>
     <mat-progress-bar mode="determinate" [value]="calculateProgress()"></mat-progress-bar>
 </div>
 <div *ngIf="endGame">
-    <h1>Mixed Letters - {{category?.name}} - Results</h1>
-    <p>points: {{gamePoints}}</p>
-    <p>amount of attempts: {{tryCount}}</p>
+    <h1>Mixed Letters - {{ category?.['name'] }} - Results</h1>
+    <p>points: {{ gamePoints }}</p>
+    <p>amount of attempts: {{ tryCount }}</p>
     <ul>
-        <li *ngFor="let word of words">
-            <span>{{word.origin}}</span>
-            <span>{{word.target}}</span>
-            <mat-icon *ngIf="word.origin===word.guess">check</mat-icon>
-            <mat-icon *ngIf="word.origin!==word.guess">close</mat-icon>
-
+        <li *ngFor="let word of words; let i = index">
+            <span>{{ word['origin'] }}</span>
+            <span>{{ word['target'] }}</span>
+            <mat-icon *ngIf="guesses[i]">check</mat-icon>
+            <mat-icon *ngIf="!guesses[i]">close</mat-icon>
         </li>            
-        <button mat-raised-button color="primary" (click)="startNewGame()">Start New Game</button>
-
     </ul>
+    <button mat-raised-button color="primary" (click)="startNewGame()">Start New Game</button>
 </div>
-
