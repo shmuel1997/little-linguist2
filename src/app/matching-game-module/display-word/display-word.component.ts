@@ -8,27 +8,20 @@ import { NgClass } from '@angular/common';
   standalone: true,
   imports: [MatCardModule, NgClass],
   templateUrl: './display-word.component.html',
-  styleUrl: './display-word.component.css'
+  styleUrl: './display-word.component.css',
 })
 export class DisplayWordComponent {
-
-
-  @Input() word: string = "";
+  @Input() word: string = '';
   @Input() wordStatus: WordStatus = 0;
 
   getWordStyle() {
-
-
-
     switch (this.wordStatus) {
-      case WordStatus.selected:
-        return "selected-word";
-      case WordStatus.disabled:
-        return "disabled-word";
+      case WordStatus.Selected:
+        return 'selected-word';
+      case WordStatus.Disabled:
+        return 'disabled-word';
       default:
         return '';
     }
   }
-
-
 }

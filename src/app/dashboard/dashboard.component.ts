@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { GamePlayerDifficultyService } from '../services/game-player-difficulty.service';
-import { GamePlayed } from '../../shared/model/gamePlayed';
+import { GamePlayed } from '../../shared/model/game-Played';
 import { CategoriesService } from '../services/categories.service';
 
 @Component({

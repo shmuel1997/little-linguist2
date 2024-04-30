@@ -1,3 +1,5 @@
-export enum WordStatus{
-    normal, selected, disabled
+export enum WordStatus {
+  Normal,
+  Selected,
+  Disabled,
 }

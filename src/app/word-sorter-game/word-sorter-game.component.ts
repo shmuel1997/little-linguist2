@@ -1,9 +1,9 @@
-import { Component, OnInit,  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoriesService } from '../services/categories.service';
 import { DialogMatchGameComponent } from '../matching-game-module/dialog-match-game/dialog-match-game.component';
-import { Category } from '../../shared/model/category'; 
-import { NgIf,NgFor } from '@angular/common';
+import { Category } from '../../shared/model/category';
+import { NgIf, NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { ExitGameComponent } from '../exit-game/exit-game.component';
@@ -29,28 +29,25 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     RouterModule,
     MatToolbarModule,
     ExitGameComponent,
-    
-    
-  ], 
+  ],
   templateUrl: './word-sorter-game.component.html',
-  styleUrls: ['./word-sorter-game.component.css'] 
+  styleUrls: ['./word-sorter-game.component.css'],
 })
-
 export class WordSorterGameComponent implements OnInit {
-toggleMenu() {
-throw new Error('Method not implemented.');
-}
-  currentWord: string | undefined; 
-  currentCategory: Category | undefined; 
-  otherCategory: Category | undefined; 
+  toggleMenu() {
+    throw new Error('Method not implemented.');
+  }
+  currentWord: string | undefined;
+  currentCategory: Category | undefined;
+  otherCategory: Category | undefined;
   wordsToGuess: string[] = [];
   currentWordIndex: number = 0;
   score: number = 0;
   gameOver: boolean = false;
-progress: unknown;
+  progress: unknown;
 
   constructor(
-    private categoriesService: CategoriesService, 
+    private categoriesService: CategoriesService,
     public dialog: MatDialog
   ) {}
 
@@ -59,17 +56,17 @@ progress: unknown;
   }
 
   startGame(): void {
-    
     const categories = this.categoriesService.list();
-    
-    this.currentCategory = categories[Math.floor(Math.random() * categories.length)];
-    this.otherCategory = categories[Math.floor(Math.random() * categories.length)];
-    
-    
+
+    this.currentCategory =
+      categories[Math.floor(Math.random() * categories.length)];
+    this.otherCategory =
+      categories[Math.floor(Math.random() * categories.length)];
+
     this.wordsToGuess = [
-      ...this.currentCategory.words.map(word => word.origin), 
-      ...this.otherCategory.words.map(word => word.origin)
-    ].sort(() => Math.random() - 0.5); 
+      ...this.currentCategory.words.map((word) => word.origin),
+      ...this.otherCategory.words.map((word) => word.origin),
+    ].sort(() => Math.random() - 0.5);
 
     this.nextWord();
   }
@@ -79,7 +76,6 @@ progress: unknown;
       this.currentWord = this.wordsToGuess[this.currentWordIndex++];
     } else {
       this.gameOver = true;
-    
     }
   }
 
@@ -87,9 +83,9 @@ progress: unknown;
     if (!this.currentCategory || !this.currentWord) return;
 
     const correct = this.currentCategory.words.some(
-      word => word.origin === this.currentWord
+      (word) => word.origin === this.currentWord
     );
-    
+
     if (isCorrect === correct) {
       this.score++;
       this.showDialog(true);
@@ -101,7 +97,7 @@ progress: unknown;
 
   showDialog(isSuccess: boolean): void {
     this.dialog.open(DialogMatchGameComponent, {
-      data: { isSuccess }
+      data: { isSuccess },
     });
   }
 
@@ -111,5 +107,4 @@ progress: unknown;
     this.gameOver = false;
     this.startGame();
   }
-  
 }

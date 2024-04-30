@@ -1,40 +1,59 @@
 <div *ngIf="!endGame">
-    <mat-icon (click)="exit()">exit_to_app</mat-icon>
-    <form #mixGameForm="ngForm" (ngSubmit)="submit()">
+  <mat-icon (click)="exit()">exit_to_app</mat-icon>
+  <form #mixGameForm="ngForm" (ngSubmit)="submit()">
+    <div>
+      <h1>Mixed Letters - {{ category?.['name'] }}</h1>
+      <div class="mix-game">
+        <span>{{ words?.[index]?.['target'] }}</span>
+        <span>{{ mixWord }}</span>
+
         <div>
-            <h1>Mixed Letters - {{ category?.['name'] }}</h1>
-            <div class="mix-game">
-                <span>{{ words?.[index]?.['target'] }}</span>
-                <span>{{ mixWord }}</span>
-
-                <div>
-                    <mat-form-field>
-                        <mat-label>Guess:</mat-label>
-                        <input matInput [(ngModel)]="guess" name="guess" #guessField="ngModel" required>
-                    </mat-form-field>
-                </div>
-            </div>
+          <mat-form-field>
+            <mat-label>Guess:</mat-label>
+            <input
+              matInput
+              [(ngModel)]="guess"
+              name="guess"
+              #guessField="ngModel"
+              required
+            />
+          </mat-form-field>
         </div>
+      </div>
+    </div>
 
-        <button type="button" mat-raised-button color="primary" (click)="reset()">
-            Reset</button>
-        <button type="submit" mat-raised-button color="primary" [disabled]="mixGameForm.invalid || mixGameForm.pristine">
-            Submit
-        </button>
-    </form><br><br>
-    <mat-progress-bar mode="determinate" [value]="calculateProgress()"></mat-progress-bar>
+    <div class="button-row">
+      <button type="button" mat-raised-button color="primary" (click)="reset()">
+        Reset
+      </button>
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="mixGameForm.invalid || mixGameForm.pristine"
+      >
+        Submit
+      </button>
+    </div></form>
+  <br /><br />
+  <mat-progress-bar
+    mode="determinate"
+    [value]="calculateProgress()"
+  ></mat-progress-bar>
 </div>
 <div *ngIf="endGame">
-    <h1>Mixed Letters - {{ category?.['name'] }} - Results</h1>
-    <p>points: {{ gamePoints }}</p>
-    <p>amount of attempts: {{ tryCount }}</p>
-    <ul>
-        <li *ngFor="let word of words; let i = index">
-            <span>{{ word['origin'] }}</span>
-            <span>{{ word['target'] }}</span>
-            <mat-icon *ngIf="guesses[i]">check</mat-icon>
-            <mat-icon *ngIf="!guesses[i]">close</mat-icon>
-        </li>            
-    </ul>
-    <button mat-raised-button color="primary" (click)="startNewGame()">Start New Game</button>
+  <h1>Mixed Letters - {{ category?.['name'] }} - Results</h1>
+  <p>points: {{ gamePoints }}</p>
+  <p>amount of attempts: {{ tryCount }}</p>
+  <ul>
+    <li *ngFor="let word of words; let i = index">
+      <span>{{ word["origin"] }}</span>
+      <span>{{ word["target"] }}</span>
+      <mat-icon *ngIf="guesses[i]">check</mat-icon>
+      <mat-icon *ngIf="!guesses[i]">close</mat-icon>
+    </li>
+  </ul>
+  <button mat-raised-button color="primary" (click)="startNewGame()">
+    Start New Game
+  </button>
 </div>

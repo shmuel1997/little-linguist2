@@ -1,17 +1,24 @@
-
-  <div class="content" *ngIf="currentCategory && !gameOver">
-    <h1>Word sorter - {{ currentCategory.name }}</h1>
-    <p>Is word {{ currentWord }} part of the {{ currentCategory.name }} category?</p>
-    <div class="actions">
-      <button mat-raised-button color="primary" (click)="checkAnswer(true)">Yes</button>
-      <button mat-raised-button color="warn" (click)="checkAnswer(false)">No</button>
-    </div>
-    <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+<div class="content" *ngIf="currentCategory && !gameOver">
+  <h1>Word sorter - {{ currentCategory.name }}</h1>
+  <p>
+    Is word {{ currentWord }} part of the {{ currentCategory.name }} category?
+  </p>
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="checkAnswer(true)">
+      Yes
+    </button>
+    <button mat-raised-button color="warn" (click)="checkAnswer(false)">
+      No
+    </button>
   </div>
-  
-  <ng-template *ngIf="gameOver">
-    <div>
-      <h2>Game Over! Your score: {{ score }}</h2>
-      <button mat-raised-button color="primary" (click)="restartGame()">Play Again</button>
-    </div>
-  </ng-template>
+  <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+</div>
+
+<ng-template *ngIf="gameOver">
+  <div>
+    <h2>Game Over! Your score: {{ score }}</h2>
+    <button mat-raised-button color="primary" (click)="restartGame()">
+      Play Again
+    </button>
+  </div>
+</ng-template>

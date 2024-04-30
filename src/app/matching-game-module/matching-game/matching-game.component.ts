@@ -10,14 +10,21 @@ import { MatTableModule } from '@angular/material/table';
 import { DisplayWordComponent } from '../display-word/display-word.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ExitGameComponent } from '../../exit-game/exit-game.component';
-import { GamePlayed } from '../../../shared/model/gamePlayed';
+import { GamePlayed } from '../../../shared/model/game-Played';
 import { GamePlayerDifficultyService } from '../../services/game-player-difficulty.service';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-matching-game',
   standalone: true,
-  imports: [MatIconModule, NgForOf, MatTableModule, NgIf, DisplayWordComponent, MatButtonModule],
+  imports: [
+    MatIconModule,
+    NgForOf,
+    MatTableModule,
+    NgIf,
+    DisplayWordComponent,
+    MatButtonModule,
+  ],
   templateUrl: './matching-game.component.html',
   styleUrl: './matching-game.component.css',
 })
@@ -61,47 +68,44 @@ export class MatchingGameComponent {
   }
   resetWordStatusTarget() {
     for (let i = 0; i < this.wordStatusTarget.length; i++) {
-      if (this.wordStatusTarget[i] != WordStatus.disabled)
-        this.wordStatusTarget[i] = WordStatus.normal;
+      if (this.wordStatusTarget[i] != WordStatus.Disabled)
+        this.wordStatusTarget[i] = WordStatus.Normal;
     }
   }
   resetWordStatusOrigin() {
     for (let i = 0; i < this.wordStatusOrigin.length; i++) {
-      if (this.wordStatusOrigin[i] != WordStatus.disabled)
-        this.wordStatusOrigin[i] = WordStatus.normal;
+      if (this.wordStatusOrigin[i] != WordStatus.Disabled)
+        this.wordStatusOrigin[i] = WordStatus.Normal;
     }
   }
 
   selectOriginWord(index: number) {
-    // אם המילה נבחרה כבר והיא מושבתת, אל תעשה כלום
-    if (this.wordStatusOrigin[index] === WordStatus.disabled) {
+    if (this.wordStatusOrigin[index] === WordStatus.Disabled) {
       return;
     }
-  
-    // אם המילה עדיין לא נבחרה, המשך עם הלוגיקה של בדיקת ההתאמה
+
     this.resetWordStatusOrigin();
-    this.wordStatusOrigin[index] = WordStatus.selected;
+    this.wordStatusOrigin[index] = WordStatus.Selected;
     const indexTarget = this.checkSelected('origin');
     if (indexTarget > -1) {
       this.checkMatch(index, indexTarget);
     }
   }
-  
+
   selectTargetWord(index: number) {
-    // אם המילה נבחרה כבר והיא מושבתת, אל תעשה כלום
-    if (this.wordStatusTarget[index] === WordStatus.disabled) {
+    
+    if (this.wordStatusTarget[index] === WordStatus.Disabled) {
       return;
     }
-  
-    // אם המילה עדיין לא נבחרה, המשך עם הלוגיקה של בדיקת ההתאמה
+
+    
     this.resetWordStatusTarget();
-    this.wordStatusTarget[index] = WordStatus.selected;
+    this.wordStatusTarget[index] = WordStatus.Selected;
     const indexOrigin = this.checkSelected('target');
     if (indexOrigin > -1) {
       this.checkMatch(indexOrigin, index);
     }
   }
-  
 
   checkMatch(indexOrigin: number, indexTarget: number) {
     this.tryCount++;
@@ -123,8 +127,8 @@ export class MatchingGameComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         if (isSuccess) {
-          this.wordStatusOrigin[indexOrigin] = WordStatus.disabled;
-          this.wordStatusTarget[indexTarget] = WordStatus.disabled;
+          this.wordStatusOrigin[indexOrigin] = WordStatus.Disabled;
+          this.wordStatusTarget[indexTarget] = WordStatus.Disabled;
         }
         this.checkEndGame();
         if (!this.endGame) {
@@ -137,13 +141,14 @@ export class MatchingGameComponent {
   checkEndGame() {
     this.endGame = true;
     for (let i = 0; i < this.wordStatusOrigin.length; i++) {
-      if (this.wordStatusOrigin[i] != WordStatus.disabled) this.endGame = false;
+      if (this.wordStatusOrigin[i] != WordStatus.Disabled) this.endGame = false;
     }
     if (this.endGame) {
       const game: GamePlayed = {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
+        idGame: 0,
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
     }
@@ -151,11 +156,11 @@ export class MatchingGameComponent {
   checkSelected(trigger: string) {
     if (trigger == 'target')
       return this.wordStatusOrigin.findIndex(
-        (status: WordStatus) => status == WordStatus.selected
+        (status: WordStatus) => status == WordStatus.Selected
       );
     else
       return this.wordStatusTarget.findIndex(
-        (status: WordStatus) => status == WordStatus.selected
+        (status: WordStatus) => status == WordStatus.Selected
       );
   }
   exit() {
@@ -165,14 +170,19 @@ export class MatchingGameComponent {
     this.category = this.categoryService.get(parseInt(this.idCategory));
     this.words = this.category?.words;
     if (this.words && this.words.length < 5) {
-      this.errorWords = 'To use this game, a category must contain a minimum of five words';
+      this.errorWords =
+        'To use this game, a category must contain a minimum of five words';
     } else {
       this.errorWords = undefined;
-      const wordsSort = this.words ? [...this.words].sort(() => Math.random() - 0.5) : [];
+      const wordsSort = this.words
+        ? [...this.words].sort(() => Math.random() - 0.5)
+        : [];
       this.wordsToDisplay = wordsSort.slice(0, 5);
-      this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(() => Math.random() - 0.5);
-      this.wordStatusOrigin.fill(WordStatus.normal); // אפס את המערך
-      this.wordStatusTarget.fill(WordStatus.normal); // אפס את המערך
+      this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(
+        () => Math.random() - 0.5
+      );
+      this.wordStatusOrigin.fill(WordStatus.Normal); 
+      this.wordStatusTarget.fill(WordStatus.Normal); 
       this.endGame = false;
       this.tryCount = 0;
       this.gamePoints = 16;

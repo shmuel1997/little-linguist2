@@ -14,11 +14,9 @@ import { RouterModule } from '@angular/router';
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './exit-game.component.html',
   styleUrl: './exit-game.component.css',
 })
-export class ExitGameComponent {
-
-}
+export class ExitGameComponent {}

@@ -1,16 +1,15 @@
 .example-spacer {
-    flex: 1 1 auto;
-  }
-  
-  .content {
-    text-align: center;
-  }
-  
-  .actions {
-    margin: 20px 0;
-  }
-  
-  mat-progress-bar {
-    margin-top: 20px;
-  }
-  
+  flex: 1 1 auto;
+}
+
+.content {
+  text-align: center;
+}
+
+.actions {
+  margin: 20px 0;
+}
+
+mat-progress-bar {
+  margin-top: 20px;
+}

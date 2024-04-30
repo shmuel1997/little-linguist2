@@ -1,7 +1,12 @@
-import { Component, Inject,  } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+} from '@angular/material/dialog';
 import { GameManagerService } from '../services/game-manager.service';
-import { GameProfile } from '../../shared/model/gameProfile';
+import { GameProfile } from '../../shared/model/game-Profile';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,20 +18,28 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-select-game',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, NgForOf,MatButtonModule,
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    NgForOf,
+    MatButtonModule,
     MatDialogContent,
     MatDialogActions,
-    MatDialogClose,RouterModule],
+    MatDialogClose,
+    RouterModule,
+  ],
   templateUrl: './select-game.component.html',
-  styleUrl: './select-game.component.css'
+  styleUrl: './select-game.component.css',
 })
 export class SelectGameComponent {
   gamesProfile: GameProfile[] = [];
   selectedValue?: GameProfile;
   constructor(
-    private gameManagerService: GameManagerService, 
-    @Inject (MAT_DIALOG_DATA) public categoryId:number) {
-  }
+    private gameManagerService: GameManagerService,
+    @Inject(MAT_DIALOG_DATA) public categoryId: number
+  ) {}
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     this.gamesProfile = this.gameManagerService.gamesProfile;

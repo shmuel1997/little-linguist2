@@ -13,7 +13,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DialogMatchGameComponent } from '../matching-game-module/dialog-match-game/dialog-match-game.component';
 import { GamePlayerDifficultyService } from '../services/game-player-difficulty.service';
-import { GamePlayed } from '../../shared/model/gamePlayed';
+import { GamePlayed } from '../../shared/model/game-Played';
 
 @Component({
   selector: 'app-mixed-words',
@@ -74,26 +74,27 @@ export class MixedWordsComponent implements OnInit {
     this.dialogService.open(DialogMatchGameComponent, {
       data: isSuccess,
     });
-  
+
     if (isSuccess) {
       this.numSuccess++;
     } else {
       this.gamePoints -= 2;
     }
-  
+
     const isEndOfGame = this.index + 1 === this.words?.length;
     if (isEndOfGame) {
       const game: GamePlayed = {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
+        idGame: 0,
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
       this.endGame = true;
     } else {
       this.reset();
       this.nextWord();
-      if(currentWord) {
+      if (currentWord) {
         this.guesses[this.index] = isSuccess;
       }
     }
@@ -108,10 +109,9 @@ export class MixedWordsComponent implements OnInit {
     const guessedWordsRatio = this.numSuccess / totalWords;
     const categoryProgressRatio = (this.index + 1) / totalWords;
     const progress = Math.max(guessedWordsRatio, categoryProgressRatio) * 100;
-  
+
     return progress;
   }
-  
 
   startNewGame() {
     this.index = -1;

@@ -1,14 +1,16 @@
-<mat-card (click)="openSelectGame(category)" *ngFor="let category of categories" class="cards">
-  <mat-card-header>
-    <mat-icon *ngIf="getInfoDate(category)">star</mat-icon>
-    <mat-card-title> {{ category?.name }}
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div>
-      {{ category?.words?.length }} words
-    </div>
-
-  </mat-card-content>
-
-</mat-card>
+<h1>Let's Play</h1>
+<div class="cards-container">
+  <mat-card
+    (click)="openSelectGame(category)"
+    *ngFor="let category of categories"
+    class="cards"
+  >
+    <mat-card-header>
+      <mat-icon *ngIf="getInfoDate(category)">star</mat-icon>
+      <mat-card-title> {{ category.name }} </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>{{ category.words.length }} words</div>
+    </mat-card-content>
+  </mat-card>
+</div>

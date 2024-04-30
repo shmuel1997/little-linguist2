@@ -8,10 +8,9 @@ describe('WordSorterGameComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WordSorterGameComponent]
-    })
-    .compileComponents();
-    
+      imports: [WordSorterGameComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(WordSorterGameComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
