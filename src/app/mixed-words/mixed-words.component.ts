@@ -76,6 +76,7 @@ export class MixedWordsComponent implements OnInit {
     if (isSuccess) {
       this.numSuccess++;
     } else {
+      if(this.gamePoints!=0)
       this.gamePoints -= 2;
     }
 
@@ -85,7 +86,6 @@ export class MixedWordsComponent implements OnInit {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
-        idGame: 0,
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
       this.endGame = true;

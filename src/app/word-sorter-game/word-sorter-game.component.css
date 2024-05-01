@@ -13,3 +13,8 @@
 mat-progress-bar {
   margin-top: 20px;
 }
+li{
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+}
