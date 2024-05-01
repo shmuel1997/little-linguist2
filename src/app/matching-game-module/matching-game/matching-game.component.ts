@@ -93,12 +93,10 @@ export class MatchingGameComponent {
   }
 
   selectTargetWord(index: number) {
-    
     if (this.wordStatusTarget[index] === WordStatus.Disabled) {
       return;
     }
 
-    
     this.resetWordStatusTarget();
     this.wordStatusTarget[index] = WordStatus.Selected;
     const indexOrigin = this.checkSelected('target');
@@ -181,8 +179,8 @@ export class MatchingGameComponent {
       this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(
         () => Math.random() - 0.5
       );
-      this.wordStatusOrigin.fill(WordStatus.Normal); 
-      this.wordStatusTarget.fill(WordStatus.Normal); 
+      this.wordStatusOrigin.fill(WordStatus.Normal);
+      this.wordStatusTarget.fill(WordStatus.Normal);
       this.endGame = false;
       this.tryCount = 0;
       this.gamePoints = 16;

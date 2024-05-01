@@ -29,3 +29,26 @@ h1 {
 .exit:hover {
   color: #f00;
 }
+.end-game-details {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.end-game-details p {
+  font-size: 1.5em;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+}
+.game-details {
+  text-align: center;
+  width: 100%;
+}
+
+h1,
+.game-details p {
+  margin: 10px 0;
+}

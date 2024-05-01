@@ -1,11 +1,10 @@
-
-<div *ngIf="!endGame&&words">
-  <mat-icon (click)="exit()">exit_to_app</mat-icon>
+<div *ngIf="!endGame && words">
+  <mat-icon class="exit" (click)="exit()">exit_to_app</mat-icon>
   <form #mixGameForm="ngForm" (ngSubmit)="submit()">
     <div>
       <h1>Mixed Letters - {{ category?.['name'] }}</h1>
       <div class="mix-game">
-        <span>{{ words[index]['target'] }}</span>
+        <span>{{ words[index]["target"] }}</span>
         <span>{{ mixWord }}</span>
 
         <div>
@@ -35,27 +34,37 @@
       >
         Submit
       </button>
-    </div></form>
+    </div>
+  </form>
   <br /><br />
   <mat-progress-bar
     mode="determinate"
     [value]="calculateProgress()"
   ></mat-progress-bar>
 </div>
-<div *ngIf="endGame">
-  <h1>Mixed Letters - {{ category?.['name'] }} - Results</h1>
-  <p>points: {{ gamePoints }}</p>
-  <p>amount of attempts: {{ tryCount }}</p>
-  <ul>
-    <li *ngFor="let word of words; let i = index">
-      <span>{{ word["origin"] }}</span>
-      <span>{{ word["guess"] }}</span>
-      <mat-icon *ngIf="word['guess'] === word['origin']">check</mat-icon>
-      <mat-icon *ngIf="word['guess'] != word['origin']">close</mat-icon>
+<div *ngIf="endGame" class="end-game-container">
+  <mat-icon (click)="exit()" class="exit-icon">exit_to_app</mat-icon>
+  <h1 class="game-title">Mixed Letters - {{ category?.['name'] }} - Results</h1>
+  <p class="game-info">Points: {{ gamePoints }}</p>
+  <p class="game-info">Amount of attempts: {{ tryCount }}</p>
+  <ul class="word-list">
+    <li *ngFor="let word of words; let i = index" class="word-item">
+      <span class="word-origin">{{ word["origin"] }}</span>
+      <span class="word-guess">{{ word["guess"] }}</span>
+      <mat-icon *ngIf="word['guess'] === word['origin']" class="check-icon"
+        >check</mat-icon
+      >
+      <mat-icon *ngIf="word['guess'] !== word['origin']" class="close-icon"
+        >close</mat-icon
+      >
     </li>
   </ul>
-  <button mat-raised-button color="primary" (click)="startNewGame()">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="startNewGame()"
+    class="start-new-game-btn"
+  >
     Start New Game
   </button>
 </div>
- 

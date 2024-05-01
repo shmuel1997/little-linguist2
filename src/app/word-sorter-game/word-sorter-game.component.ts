@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CategoriesService } from '../services/categories.service';
 import { DialogMatchGameComponent } from '../matching-game-module/dialog-match-game/dialog-match-game.component';
 import { Category } from '../../shared/model/category';
@@ -32,6 +32,7 @@ import { TranslatedWord } from '../../shared/model/translated-word';
     RouterModule,
     MatToolbarModule,
     ExitGameComponent,
+    MatDialogModule,
   ],
   templateUrl: './word-sorter-game.component.html',
   styleUrls: ['./word-sorter-game.component.css'],
@@ -59,6 +60,9 @@ export class WordSorterGameComponent implements OnInit {
       parseInt(this.idCategory)
     );
     this.startGame();
+  }
+  exit() {
+    this.dialog.open(ExitGameComponent);
   }
 
   startGame(): void {
@@ -97,7 +101,7 @@ export class WordSorterGameComponent implements OnInit {
   }
 
   nextWord(): void {
-    if (this.currentWordIndex < this.wordsToGuess.length-1) {
+    if (this.currentWordIndex < this.wordsToGuess.length - 1) {
       this.currentWord = this.wordsToGuess[++this.currentWordIndex].origin;
     } else {
       this.gameOver = true;
@@ -109,8 +113,8 @@ export class WordSorterGameComponent implements OnInit {
       this.gamePlayerDifficultyService.addGamePlayed(game);
     }
   }
-  getScore(){
-    return  Math.floor(100 * (this.score / 6));
+  getScore() {
+    return Math.floor(100 * (this.score / 6));
   }
   checkAnswer(isCorrect: boolean): void {
     if (!this.currentCategory || !this.currentWord) return;
@@ -141,9 +145,9 @@ export class WordSorterGameComponent implements OnInit {
   restartGame(): void {
     this.currentWordIndex = -1;
     this.score = 0;
-    this.wordsToGuess=[];
+    this.wordsToGuess = [];
     this.gameOver = false;
-    this.guesses=[];
+    this.guesses = [];
     this.startGame();
   }
 }

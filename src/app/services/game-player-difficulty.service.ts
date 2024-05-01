@@ -43,7 +43,9 @@ export class GamePlayerDifficultyService {
 
   getNumberOfLearnedCategories(): number {
     const gamesPlayed = this.getGamesPlayed();
-    const learnedCategoryIds = new Set(gamesPlayed.map(game => game.idCategory));
+    const learnedCategoryIds = new Set(
+      gamesPlayed.map((game) => game.idCategory)
+    );
     return learnedCategoryIds.size;
   }
 

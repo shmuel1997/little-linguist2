@@ -1,35 +1,43 @@
+<mat-icon (click)="exit()" class="exit">exit_to_app</mat-icon>
 <div class="content" *ngIf="currentCategory && !gameOver">
   <h1>Word sorter - {{ currentCategory.name }}</h1>
-  <p>
-    Is word {{ currentWord }} part of the {{ currentCategory.name }} category?
-  </p>
-  <div class="actions">
-    <button mat-raised-button color="primary" (click)="checkAnswer(true)">
-      Yes
-    </button>
-    <button mat-raised-button color="warn" (click)="checkAnswer(false)">
-      No
-    </button>
+  <br /><br />
+  <div class="word-sorter">
+    <p>
+      Is word {{ currentWord }} part of the {{ currentCategory.name }} category?
+    </p>
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="checkAnswer(true)">
+        Yes
+      </button>
+      <button mat-raised-button color="warn" (click)="checkAnswer(false)">
+        No
+      </button>
+    </div>
   </div>
-  <mat-progress-bar mode="determinate" [value]="(currentWordIndex/6)*100"></mat-progress-bar>
+  <br /><br />
+  <div class="word-sorter progress-container">
+    <mat-progress-bar
+      mode="determinate"
+      [value]="(currentWordIndex / 6) * 100"
+    ></mat-progress-bar>
+  </div>
 </div>
-
-<div *ngIf="gameOver">
-  <div>
-    <h1>Word Sorter -{{currentCategory?.name}} -Results</h1>
-    <h4>grade : {{getScore()}}</h4>
-    <h4>You classified {{score}} out of 6 words correcly</h4>
-    <ul>
-      <li *ngFor="let word of wordsToGuess; let index = index">
-        <span>Origin: {{word['origin']}}</span>
-        <span>Category: {{currentCategory?.name}}</span>
-        <span>Guess: {{ word["guess"] }}</span>
-        <mat-icon *ngIf="guesses[index]">check</mat-icon>
-        <mat-icon *ngIf="!guesses[index]">close</mat-icon>
-      </li>
-    </ul>
-    <button mat-raised-button color="primary" (click)="restartGame()">
-      Play Again
-    </button>
-  </div>
+<div *ngIf="gameOver" class="game-over-container">
+  <h1>Word Sorter -{{ currentCategory?.name }} -Results</h1>
+  <h4>grade : {{ getScore() }}</h4>
+  <h4>You classified {{ score / 10 }} out of 6 words correctly</h4>
+  <br /><br />
+  <ul>
+    <li *ngFor="let word of wordsToGuess; let index = index">
+      <span>Origin: {{ word["origin"] }}</span>
+      <span>Category: {{ currentCategory?.name }}</span>
+      <span>Guess: {{ word["guess"] }}</span>
+      <mat-icon *ngIf="guesses[index]">check</mat-icon>
+      <mat-icon *ngIf="!guesses[index]">close</mat-icon>
+    </li>
+  </ul>
+  <button mat-raised-button color="primary" (click)="restartGame()">
+    Play Again
+  </button>
 </div>

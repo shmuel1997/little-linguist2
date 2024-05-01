@@ -76,7 +76,6 @@ export class MixedWordsComponent implements OnInit {
     if (isSuccess) {
       this.numSuccess++;
     } else {
-      if(this.gamePoints!=0)
       this.gamePoints -= 2;
     }
 
@@ -86,6 +85,7 @@ export class MixedWordsComponent implements OnInit {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
+        idGame: 0,
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
       this.endGame = true;
@@ -101,11 +101,10 @@ export class MixedWordsComponent implements OnInit {
 
   calculateProgress(): number {
     const totalWords = this.words?.length || 0;
-    /*  const guessedWordsRatio = this.numSuccess / totalWords;
-    const categoryProgressRatio = this.index  / totalWords;
-    const progress = Math.max(guessedWordsRatio, categoryProgressRatio) * 100; */
-    // return progress;
-    return (this.numSuccess / totalWords) * 100;
+    const guessedWordsRatio = this.numSuccess / totalWords;
+    const categoryProgressRatio = this.index / totalWords;
+    const progress = Math.max(guessedWordsRatio, categoryProgressRatio) * 100;
+    return progress;
   }
 
   startNewGame() {

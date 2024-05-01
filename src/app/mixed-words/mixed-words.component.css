@@ -55,14 +55,97 @@ form {
   align-items: center;
 }
 
-
 .button-row {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 10px; 
+  gap: 10px;
   margin-top: 10px;
 }
-li>span {
+li > span {
   margin: 2px;
+}
+.end-game-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  margin: 20px auto;
+}
+
+.end-game-container h1 {
+  color: black;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.end-game-container p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.end-game-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.end-game-container li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.end-game-container li span {
+  flex: 1;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.end-game-container mat-icon {
+  font-size: 24px;
+}
+
+.end-game-container mat-icon.check {
+  color: #4caf50;
+}
+
+.end-game-container mat-icon.close {
+  color: #f44336;
+}
+
+.end-game-container button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.end-game-container button:hover {
+  background-color: #45a049;
+}
+.exit {
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.exit:hover {
+  color: #f00;
+}
+.start-new-game-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }

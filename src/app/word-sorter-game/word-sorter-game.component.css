@@ -13,8 +13,60 @@
 mat-progress-bar {
   margin-top: 20px;
 }
-li{
+li {
   list-style-type: none;
   display: flex;
   justify-content: space-around;
+}
+.game-over-container {
+  text-align: center;
+  margin: 20px;
+}
+
+.game-over-container h1,
+.game-over-container h4 {
+  margin: 10px 0;
+}
+
+.game-over-container button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+}
+.word-sorter {
+  text-align: center;
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.word-sorter p {
+  margin-bottom: 20px;
+}
+
+.word-sorter .actions {
+  display: flex;
+  justify-content: center;
+}
+
+.word-sorter button {
+  margin: 0 10px;
+}
+
+.progress-container mat-progress-bar {
+  width: 100%;
+  height: 20px;
+  border-radius: 10px;
+}
+.exit {
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.exit:hover {
+  color: #f00;
 }
