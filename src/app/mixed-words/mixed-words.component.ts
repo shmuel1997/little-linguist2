@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DialogMatchGameComponent } from '../matching-game-module/dialog-match-game/dialog-match-game.component';
 import { GamePlayerDifficultyService } from '../services/game-player-difficulty.service';
@@ -19,6 +19,7 @@ import { GamePlayed } from '../../shared/model/game-Played';
   selector: 'app-mixed-words',
   standalone: true,
   imports: [
+    CommonModule,
     MatIconModule,
     FormsModule,
     MatFormFieldModule,

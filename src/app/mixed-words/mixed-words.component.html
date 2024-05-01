@@ -2,12 +2,11 @@
   <mat-icon class="exit" (click)="exit()">exit_to_app</mat-icon>
   <form #mixGameForm="ngForm" (ngSubmit)="submit()">
     <div>
-      <h1>Mixed Letters - {{ category?.['name'] }}</h1>
-      <div class="mix-game">
-        <span>{{ words[index]["target"] }}</span>
-        <span>{{ mixWord }}</span>
-
-        <div>
+      <div class="r">
+        <h1>Mixed Letters - {{ category?.['name'] }}</h1>
+        <div class="mix-game">
+          <span>{{ words[index]["target"] }}</span>
+          <span>{{ mixWord }}</span>
           <mat-form-field>
             <mat-label>Guess:</mat-label>
             <input
@@ -18,32 +17,46 @@
               required
             />
           </mat-form-field>
+
+          <div class="button-row">
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="reset()"
+            >
+              Reset
+            </button>
+            <button
+              type="submit"
+              mat-raised-button
+              color="primary"
+              [disabled]="mixGameForm.invalid || mixGameForm.pristine"
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="button-row">
-      <button type="button" mat-raised-button color="primary" (click)="reset()">
-        Reset
-      </button>
-      <button
-        type="submit"
-        mat-raised-button
-        color="primary"
-        [disabled]="mixGameForm.invalid || mixGameForm.pristine"
-      >
-        Submit
-      </button>
-    </div>
   </form>
-  <br /><br />
-  <mat-progress-bar
-    mode="determinate"
-    [value]="calculateProgress()"
-  ></mat-progress-bar>
+  <br />
+  <div class="progress-container">
+    <div class="progress-bar">
+      <mat-progress-bar
+        mode="determinate"
+        [value]="calculateProgress()"
+      ></mat-progress-bar>
+      <div class="progress-text">
+        {{ calculateProgress() | number : "1.0-0" }}%
+      </div>
+    </div>
+  </div>
 </div>
 <div *ngIf="endGame" class="end-game-container">
-  <mat-icon (click)="exit()" class="exit-icon">exit_to_app</mat-icon>
+  <div class="exit-container">
+    <mat-icon class="exit" (click)="exit()">exit_to_app</mat-icon>
+  </div>
   <h1 class="game-title">Mixed Letters - {{ category?.['name'] }} - Results</h1>
   <p class="game-info">Points: {{ gamePoints }}</p>
   <p class="game-info">Amount of attempts: {{ tryCount }}</p>
