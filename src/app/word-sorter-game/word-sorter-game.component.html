@@ -11,13 +11,13 @@
       No
     </button>
   </div>
-  <mat-progress-bar mode="determinate" [value]="(score/6)*100"></mat-progress-bar>
+  <mat-progress-bar mode="determinate" [value]="(currentWordIndex/6)*100"></mat-progress-bar>
 </div>
 
 <div *ngIf="gameOver">
   <div>
     <h1>Word Sorter -{{currentCategory?.name}} -Results</h1>
-    <h4>grade : {{score*10}}</h4>
+    <h4>grade : {{getScore()}}</h4>
     <h4>You classified {{score}} out of 6 words correcly</h4>
     <ul>
       <li *ngFor="let word of wordsToGuess; let index = index">

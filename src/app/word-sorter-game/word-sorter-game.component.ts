@@ -109,7 +109,9 @@ export class WordSorterGameComponent implements OnInit {
       this.gamePlayerDifficultyService.addGamePlayed(game);
     }
   }
-
+  getScore(){
+    return  Math.floor(100 * (this.score / 6));
+  }
   checkAnswer(isCorrect: boolean): void {
     if (!this.currentCategory || !this.currentWord) return;
     isCorrect
@@ -139,6 +141,7 @@ export class WordSorterGameComponent implements OnInit {
   restartGame(): void {
     this.currentWordIndex = -1;
     this.score = 0;
+    this.wordsToGuess=[];
     this.gameOver = false;
     this.guesses=[];
     this.startGame();
