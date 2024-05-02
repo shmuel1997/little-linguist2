@@ -60,6 +60,7 @@
   <h1 class="game-title">Mixed Letters - {{ category?.['name'] }} - Results</h1>
   <p class="game-info">Points: {{ gamePoints }}</p>
   <p class="game-info">Amount of attempts: {{ tryCount }}</p>
+  <p>Grade: {{ calculateGrade() }}</p>
   <ul class="word-list">
     <li *ngFor="let word of words; let i = index" class="word-item">
       <span class="word-origin">{{ word["origin"] }}</span>

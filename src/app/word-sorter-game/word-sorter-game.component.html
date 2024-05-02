@@ -1,4 +1,7 @@
 <mat-icon (click)="exit()" class="exit">exit_to_app</mat-icon>
+<div *ngIf="errorWords" class="alert alert-danger">
+  {{ errorWords }}
+</div>
 <div class="content" *ngIf="currentCategory && !gameOver">
   <h1>Word sorter - {{ currentCategory.name }}</h1>
   <br /><br />
@@ -19,9 +22,13 @@
   <div class="word-sorter progress-container">
     <mat-progress-bar
       mode="determinate"
-      [value]="(currentWordIndex / 6) * 100"
+      [value]="progressValue()"
     ></mat-progress-bar>
+    <div class="progress-text">
+      {{ progressValue() | number:'1.0-0' }}%
+    </div>
   </div>
+  
 </div>
 <div *ngIf="gameOver" class="game-over-container">
   <h1>Word Sorter -{{ currentCategory?.name }} -Results</h1>

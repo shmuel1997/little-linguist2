@@ -88,7 +88,7 @@
 
 .exit-container {
   display: flex;
-  justify-content: flex-start; 
+  justify-content: flex-start;
 }
 .exit {
   font-size: 24px;
@@ -102,46 +102,44 @@
 }
 
 .progress-container {
-  width: 80%; 
-  background-color: #f9f9f9; 
+  width: 80%;
+  background-color: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  margin: 20px auto; 
-  position: relative; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  position: relative;
 }
 
 .progress-bar {
-  position: relative; 
-  height: 20px; 
-  background-color: #ddd; 
+  position: relative;
+  height: 20px;
+  background-color: #ddd;
   border-radius: 8px;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .progress-text {
   position: absolute;
   width: 100%;
-  text-align: center; 
-  line-height: 20px; 
-  color: white; 
-  font-weight: bold; 
+  text-align: center;
+  line-height: 20px;
+  color: white;
+  font-weight: bold;
 }
 
 .start-new-game-btn {
-  display: block;       
-  margin: 20px auto;    
-  padding: 10px 20px;   
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
   font-size: 16px;
-  cursor: pointer;      
-  border-radius: 4px;   
-  background-color: #007BFF; 
-  color: white;         
-  border: none;         
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  border: none;
 }
 
 .start-new-game-btn:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
-
-

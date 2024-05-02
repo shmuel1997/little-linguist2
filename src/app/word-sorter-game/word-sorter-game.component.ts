@@ -3,7 +3,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CategoriesService } from '../services/categories.service';
 import { DialogMatchGameComponent } from '../matching-game-module/dialog-match-game/dialog-match-game.component';
 import { Category } from '../../shared/model/category';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { ExitGameComponent } from '../exit-game/exit-game.component';
@@ -22,6 +22,8 @@ import { TranslatedWord } from '../../shared/model/translated-word';
   standalone: true,
   imports: [
     MatIconModule,
+    MatProgressBarModule,
+    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -48,6 +50,8 @@ export class WordSorterGameComponent implements OnInit {
   gameOver: boolean = false;
   progress: unknown;
   guesses: boolean[] = [];
+  errorWords: string = '';
+  
 
   constructor(
     private categoriesService: CategoriesService,
@@ -56,9 +60,26 @@ export class WordSorterGameComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentCategory = this.categoriesService.get(
-      parseInt(this.idCategory)
+    const categories = this.categoriesService.list();
+    const validCategories = categories.filter(
+      (category) => category.words.length >= 3
     );
+
+    if (validCategories.length < 2) {
+      this.errorWords =
+        'At least two categories with at least three words each are required to play repeat Please add words and categories.';
+      return;
+    }
+
+    this.currentCategory =
+      validCategories[Math.floor(Math.random() * validCategories.length)];
+    this.otherCategory =
+      validCategories[Math.floor(Math.random() * validCategories.length)];
+    while (this.currentCategory.id === this.otherCategory.id) {
+      this.otherCategory =
+        validCategories[Math.floor(Math.random() * validCategories.length)];
+    }
+
     this.startGame();
   }
   exit() {
@@ -141,7 +162,10 @@ export class WordSorterGameComponent implements OnInit {
       data: isSuccess,
     });
   }
-
+  progressValue(): number {
+    return (this.currentWordIndex ) / this.wordsToGuess.length * 100;
+  }
+  
   restartGame(): void {
     this.currentWordIndex = -1;
     this.score = 0;

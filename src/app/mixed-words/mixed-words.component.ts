@@ -42,6 +42,8 @@ export class MixedWordsComponent implements OnInit {
   endGame = false;
   tryCount: number = 0;
   gamePoints: number = 16;
+  grade: number = 0;
+
 
   constructor(
     private categoryService: CategoriesService,
@@ -120,5 +122,11 @@ export class MixedWordsComponent implements OnInit {
       word.guess = '';
     });
     this.nextWord();
+  }
+  calculateGrade(): number {
+    const totalWords = this.words?.length || 0;
+    const correctAnswers = this.numSuccess;
+    const grade = (correctAnswers / totalWords) * 100;
+    return grade;
   }
 }

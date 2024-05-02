@@ -26,8 +26,9 @@
 <div *ngIf="endGame">
   <h1>{{ category?.name }} results</h1>
   <div class="game-details">
-    <p>points: {{ gamePoints }}</p>
-    <p>amount of attempts: {{ tryCount }}</p>
+    <p>Points: {{ gamePoints }}</p>
+    <p>Attempts: {{ tryCount }}</p>
+    <p>Grade: {{ getScore() }}%</p>
   </div>
   <table mat-table [dataSource]="wordsToDisplay" class="mat-elevation-z8">
     <ng-container matColumnDef="OriginWord">

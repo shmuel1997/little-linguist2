@@ -104,6 +104,16 @@ export class MatchingGameComponent {
       this.checkMatch(indexOrigin, index);
     }
   }
+  getScore() {
+    const correctness = this.wordsToDisplay.filter(
+      (word) =>
+        this.wordStatusOrigin[this.wordsToDisplay.indexOf(word)] ===
+        WordStatus.Disabled
+    ).length;
+    const totalWords = this.wordsToDisplay.length;
+    const score = (correctness / totalWords) * 100;
+    return Math.round(score * 100) / 100;
+  }
 
   checkMatch(indexOrigin: number, indexTarget: number) {
     this.tryCount++;
