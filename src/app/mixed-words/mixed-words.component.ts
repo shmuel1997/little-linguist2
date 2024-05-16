@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Category } from '../../shared/model/category';
 import { CategoriesService } from '../services/categories.service';
 import { TranslatedWord } from '../../shared/model/translated-word';
@@ -14,6 +14,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DialogMatchGameComponent } from '../matching-game-module/dialog-match-game/dialog-match-game.component';
 import { GamePlayerDifficultyService } from '../services/game-player-difficulty.service';
 import { GamePlayed } from '../../shared/model/game-Played';
+import { GameManagerService } from '../services/game-manager.service';
+import { GameDifficulty } from '../../shared/model/game-Difficulty.enum';
+import { TimerComponent } from '../timer/timer.component';
 
 @Component({
   selector: 'app-mixed-words',
@@ -28,6 +31,7 @@ import { GamePlayed } from '../../shared/model/game-Played';
     NgIf,
     MatProgressBarModule,
     NgFor,
+    TimerComponent,
   ],
   templateUrl: './mixed-words.component.html',
   styleUrl: './mixed-words.component.css',
@@ -43,16 +47,21 @@ export class MixedWordsComponent implements OnInit {
   tryCount: number = 0;
   gamePoints: number = 16;
   grade: number = 0;
+  gameDuration: number = 0; 
+  displayTimeLeft: string = '';
 
+  @ViewChild(TimerComponent) timerComponent!: TimerComponent;
 
   constructor(
     private categoryService: CategoriesService,
     private dialogService: MatDialog,
-    private gamePlayerDifficultyService: GamePlayerDifficultyService
+    private gamePlayerDifficultyService: GamePlayerDifficultyService,
+    private gameManagerService: GameManagerService
   ) {}
 
   ngOnInit() {
     this.startNewGame();
+    this.gameDuration = this.gameManagerService.getGameDuration(GameDifficulty.HARD); 
   }
 
   nextWord() {
@@ -89,6 +98,8 @@ export class MixedWordsComponent implements OnInit {
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
         idGame: 0,
+        secondsLeftInGame: 0,
+        secondsPlayed: 0
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
       this.endGame = true;
@@ -128,5 +139,24 @@ export class MixedWordsComponent implements OnInit {
     const correctAnswers = this.numSuccess;
     const grade = (correctAnswers / totalWords) * 100;
     return grade;
+  }
+  handleTimeUp(): void {
+    // Implement actions when time is up (e.g., end game logic)
+    // For example:
+    this.endGame = true;
+    // Additional logic as needed
+  }
+  handleTimeLeftReport(timeLeft: number): void {
+    this.displayTimeLeft = this.formatTime(timeLeft);
+  }
+  
+  private formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secondsLeft = seconds % 60;
+    return `${minutes}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`;
+  }
+  
+  private padTime(time: number): string {
+    return time < 10 ? `0${time}` : `${time}`;
   }
 }

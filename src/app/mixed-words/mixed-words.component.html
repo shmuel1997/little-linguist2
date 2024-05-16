@@ -1,6 +1,14 @@
 <div *ngIf="!endGame && words">
   <mat-icon class="exit" (click)="exit()">exit_to_app</mat-icon>
   <form #mixGameForm="ngForm" (ngSubmit)="submit()">
+    <div class="timer-container">
+      <mat-icon>alarm</mat-icon>
+      <app-timer
+        [duration]="gameDuration"
+        (timeUp)="handleTimeUp()"
+        (reportTimeLeft)="handleTimeLeftReport($event)"
+      ></app-timer>
+    </div> 
     <div>
       <div class="r">
         <h1>Mixed Letters - {{ category?.['name'] }}</h1>
@@ -17,24 +25,9 @@
               required
             />
           </mat-form-field>
-
           <div class="button-row">
-            <button
-              type="button"
-              mat-raised-button
-              color="primary"
-              (click)="reset()"
-            >
-              Reset
-            </button>
-            <button
-              type="submit"
-              mat-raised-button
-              color="primary"
-              [disabled]="mixGameForm.invalid || mixGameForm.pristine"
-            >
-              Submit
-            </button>
+            <button type="button" mat-raised-button color="primary" (click)="reset()">Reset</button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="mixGameForm.invalid || mixGameForm.pristine">Submit</button>
           </div>
         </div>
       </div>
@@ -43,13 +36,8 @@
   <br />
   <div class="progress-container">
     <div class="progress-bar">
-      <mat-progress-bar
-        mode="determinate"
-        [value]="calculateProgress()"
-      ></mat-progress-bar>
-      <div class="progress-text">
-        {{ calculateProgress() | number : "1.0-0" }}%
-      </div>
+      <mat-progress-bar mode="determinate" [value]="calculateProgress()"></mat-progress-bar>
+      <div class="progress-text">{{ calculateProgress() | number : "1.0-0" }}%</div>
     </div>
   </div>
 </div>
@@ -65,20 +53,9 @@
     <li *ngFor="let word of words; let i = index" class="word-item">
       <span class="word-origin">{{ word["origin"] }}</span>
       <span class="word-guess">{{ word["guess"] }}</span>
-      <mat-icon *ngIf="word['guess'] === word['origin']" class="check-icon"
-        >check</mat-icon
-      >
-      <mat-icon *ngIf="word['guess'] !== word['origin']" class="close-icon"
-        >close</mat-icon
-      >
+      <mat-icon *ngIf="word['guess'] === word['origin']" class="check-icon">check</mat-icon>
+      <mat-icon *ngIf="word['guess'] !== word['origin']" class="close-icon">close</mat-icon>
     </li>
   </ul>
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="startNewGame()"
-    class="start-new-game-btn"
-  >
-    Start New Game
-  </button>
+  <button mat-raised-button color="primary" (click)="startNewGame()" class="start-new-game-btn">Start New Game</button>
 </div>

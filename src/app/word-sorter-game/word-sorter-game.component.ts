@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CategoriesService } from '../services/categories.service';
 import { DialogMatchGameComponent } from '../matching-game-module/dialog-match-game/dialog-match-game.component';
@@ -16,6 +16,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { GamePlayed } from '../../shared/model/game-Played';
 import { GamePlayerDifficultyService } from '../services/game-player-difficulty.service';
 import { TranslatedWord } from '../../shared/model/translated-word';
+import { TimerComponent } from '../timer/timer.component';
+import { GameManagerService } from '../services/game-manager.service';
+import { GameDifficulty } from '../../shared/model/game-Difficulty.enum';
 
 @Component({
   selector: 'app-word-sorter-game',
@@ -35,6 +38,7 @@ import { TranslatedWord } from '../../shared/model/translated-word';
     MatToolbarModule,
     ExitGameComponent,
     MatDialogModule,
+    TimerComponent,
   ],
   templateUrl: './word-sorter-game.component.html',
   styleUrls: ['./word-sorter-game.component.css'],
@@ -51,12 +55,17 @@ export class WordSorterGameComponent implements OnInit {
   progress: unknown;
   guesses: boolean[] = [];
   errorWords: string = '';
+  gameDuration: number = 0; 
+  displayTimeLeft: string = ''; 
+
+  @ViewChild(TimerComponent) timerComponent!: TimerComponent;
   
 
   constructor(
     private categoriesService: CategoriesService,
     private dialog: MatDialog,
-    private gamePlayerDifficultyService: GamePlayerDifficultyService
+    private gamePlayerDifficultyService: GamePlayerDifficultyService,
+    private gameManagerService: GameManagerService
   ) {}
 
   ngOnInit(): void {
@@ -81,6 +90,9 @@ export class WordSorterGameComponent implements OnInit {
     }
 
     this.startGame();
+    this.gameDuration = this.gameManagerService.getGameDuration(GameDifficulty.MEDIUM); 
+    this.timerComponent.resetTimer();
+    setTimeout(() => this.timerComponent.startTimer(), 100);
   }
   exit() {
     this.dialog.open(ExitGameComponent);
@@ -130,6 +142,8 @@ export class WordSorterGameComponent implements OnInit {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.score,
+        secondsLeftInGame: 0,
+        secondsPlayed: 0
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
     }
@@ -173,5 +187,20 @@ export class WordSorterGameComponent implements OnInit {
     this.gameOver = false;
     this.guesses = [];
     this.startGame();
+  }
+  
+  handleTimeUp(): void {
+    this.gameOver = true;
+    this.showDialog(false);
+  }
+
+  handleTimeLeftReport(timeLeft: number): void {
+    this.displayTimeLeft = this.formatTime(timeLeft);
+  }
+
+  private formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secondsLeft = seconds % 60;
+    return `${minutes}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`;
   }
 }

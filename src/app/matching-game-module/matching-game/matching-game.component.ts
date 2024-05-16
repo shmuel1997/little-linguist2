@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CategoriesService } from '../../services/categories.service';
 import { TranslatedWord } from '../../../shared/model/translated-word';
 import { WordStatus } from '../models/wordStatus.enum';
@@ -13,6 +13,9 @@ import { ExitGameComponent } from '../../exit-game/exit-game.component';
 import { GamePlayed } from '../../../shared/model/game-Played';
 import { GamePlayerDifficultyService } from '../../services/game-player-difficulty.service';
 import { MatButtonModule } from '@angular/material/button';
+import { TimerComponent } from '../../timer/timer.component';
+import { GameManagerService } from '../../services/game-manager.service';
+import { GameDifficulty } from '../../../shared/model/game-Difficulty.enum';
 
 @Component({
   selector: 'app-matching-game',
@@ -24,6 +27,8 @@ import { MatButtonModule } from '@angular/material/button';
     NgIf,
     DisplayWordComponent,
     MatButtonModule,
+    TimerComponent,
+    MatIconModule,
   ],
   templateUrl: './matching-game.component.html',
   styleUrl: './matching-game.component.css',
@@ -41,11 +46,16 @@ export class MatchingGameComponent {
   gamePoints: number = 16;
   category: Category | undefined;
   errorWords: string | undefined;
+  gameDuration: number = 0; 
+  displayTimeLeft: string = ''; 
+
+  @ViewChild(TimerComponent) timerComponent!: TimerComponent;
 
   constructor(
     private categoryService: CategoriesService,
     private dialogService: MatDialog,
-    private gamePlayerDifficultyService: GamePlayerDifficultyService
+    private gamePlayerDifficultyService: GamePlayerDifficultyService,
+    private gameManagerService: GameManagerService
   ) {}
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
@@ -157,6 +167,8 @@ export class MatchingGameComponent {
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
         idGame: 0,
+        secondsLeftInGame: 0,
+        secondsPlayed: 0
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
     }
@@ -178,22 +190,36 @@ export class MatchingGameComponent {
     this.category = this.categoryService.get(parseInt(this.idCategory));
     this.words = this.category?.words;
     if (this.words && this.words.length < 5) {
-      this.errorWords =
-        'To use this game, a category must contain a minimum of five words';
+      this.errorWords = 'To use this game, a category must contain a minimum of five words';
     } else {
       this.errorWords = undefined;
-      const wordsSort = this.words
-        ? [...this.words].sort(() => Math.random() - 0.5)
-        : [];
+      const wordsSort = this.words ? [...this.words].sort(() => Math.random() - 0.5) : [];
       this.wordsToDisplay = wordsSort.slice(0, 5);
-      this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(
-        () => Math.random() - 0.5
-      );
+      this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(() => Math.random() - 0.5);
       this.wordStatusOrigin.fill(WordStatus.Normal);
       this.wordStatusTarget.fill(WordStatus.Normal);
       this.endGame = false;
       this.tryCount = 0;
       this.gamePoints = 16;
+      this.gameDuration = this.gameManagerService.getGameDuration(GameDifficulty.EASY); 
+      this.timerComponent.resetTimer(); 
+      setTimeout(() => this.timerComponent.startTimer(), 100);
     }
+  }
+  handleTimeUp(): void {
+    this.endGame = true;
+  }
+
+  handleTimeLeftReport(timeLeft: number): void {
+    this.displayTimeLeft = this.formatTime(timeLeft);
+  }
+
+  private formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secondsLeft = seconds % 60;
+    return `${minutes}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`;
+  }  
+  private padTime(time: number): string {
+    return time < 10 ? `0${time}` : `${time}`;
   }
 }

@@ -3,7 +3,17 @@
   {{ errorWords }}
 </div>
 <div class="content" *ngIf="currentCategory && !gameOver">
+  <div class="timer-container">
+    <mat-icon>alarm</mat-icon>
+    <app-timer
+      [duration]="gameDuration"
+      (timeUp)="handleTimeUp()"
+      (reportTimeLeft)="handleTimeLeftReport($event)"
+    ></app-timer>
+  </div>
   <h1>Word sorter - {{ currentCategory.name }}</h1>
+  <br /><br />
+
   <br /><br />
   <div class="word-sorter">
     <p>
@@ -18,28 +28,25 @@
       </button>
     </div>
   </div>
-  <br /><br />
+  <br />
   <div class="word-sorter progress-container">
     <mat-progress-bar
       mode="determinate"
       [value]="progressValue()"
     ></mat-progress-bar>
-    <div class="progress-text">
-      {{ progressValue() | number:'1.0-0' }}%
-    </div>
+    <div class="progress-text">{{ progressValue() | number : "1.0-0" }}%</div>
   </div>
-  
 </div>
 <div *ngIf="gameOver" class="game-over-container">
   <h1>Word Sorter -{{ currentCategory?.name }} -Results</h1>
-  <h4>grade : {{ getScore() }}</h4>
+  <h4>Grade: {{ getScore() }}</h4>
   <h4>You classified {{ score }} out of 6 words correctly</h4>
   <br /><br />
   <ul>
     <li *ngFor="let word of wordsToGuess; let index = index">
-      <span>Origin: {{ word["origin"] }}</span>
+      <span>Origin: {{ word.origin }}</span>
       <span>Category: {{ currentCategory?.name }}</span>
-      <span>Guess: {{ word["guess"] }}</span>
+      <span>Guess: {{ word.guess }}</span>
       <mat-icon *ngIf="guesses[index]">check</mat-icon>
       <mat-icon *ngIf="!guesses[index]">close</mat-icon>
     </li>
