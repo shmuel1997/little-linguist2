@@ -57,7 +57,6 @@ export class MatchingGameComponent {
     private gamePlayerDifficultyService: GamePlayerDifficultyService,
     private gameManagerService: GameManagerService
   ) {}
-  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     this.startNewGame();
     this.category = this.categoryService.get(parseInt(this.idCategory));
@@ -167,8 +166,8 @@ export class MatchingGameComponent {
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
         idGame: 0,
-        secondsLeftInGame: 0,
-        secondsPlayed: 0
+        secondsLeftInGame: this.timerComponent.getTimeLeft(),
+        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft()
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
     }
@@ -208,6 +207,15 @@ export class MatchingGameComponent {
   }
   handleTimeUp(): void {
     this.endGame = true;
+    const game: GamePlayed = {
+      date: new Date(),
+      idCategory: parseInt(this.idCategory),
+      numOfPoints: this.gamePoints,
+      idGame: 0,
+      secondsLeftInGame: 0,
+      secondsPlayed: this.gameDuration
+    };
+    this.gamePlayerDifficultyService.addGamePlayed(game);
   }
 
   handleTimeLeftReport(timeLeft: number): void {

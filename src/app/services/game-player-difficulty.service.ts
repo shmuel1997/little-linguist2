@@ -21,7 +21,7 @@ export class GamePlayerDifficultyService {
 
   private getNextId(): number {
     const nextIdString = localStorage.getItem(this.NEXT_ID_KEY);
-    return nextIdString ? parseInt(nextIdString, 10) : 1; // אם אין ID, מתחילים מ-1
+    return nextIdString ? parseInt(nextIdString, 10) : 1;
   }
 
   private setNextId(id: number): void {
@@ -52,5 +52,25 @@ export class GamePlayerDifficultyService {
   getNumberOfUnlearnedCategories(totalCategories: number): number {
     const numberOfLearnedCategories = this.getNumberOfLearnedCategories();
     return totalCategories - numberOfLearnedCategories;
+  }
+
+  getTotalPlaytime(): number {
+    const games = this.getGamesPlayed();
+    return games.reduce((total, game) => total + game.secondsPlayed, 0);
+  }
+
+  getAverageGameTime(): number {
+    const games = this.getGamesPlayed();
+    return games.length > 0
+      ? this.getTotalPlaytime() / games.length
+      : 0;
+  }
+
+  getGamesFinishedOnTimePercent(): number {
+    const games = this.getGamesPlayed();
+    const gamesFinishedOnTime = games.filter(game => game.secondsLeftInGame > 0).length;
+    return games.length > 0
+      ? (gamesFinishedOnTime / games.length) * 100
+      : 0;
   }
 }

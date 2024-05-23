@@ -50,7 +50,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     this.timeLeft = this.duration;
     this.displayTimeLeft = this.formatTime(this.timeLeft);
   }
-  
+
+  public getTimeLeft(): number {
+    return this.timeLeft;
+  }
 
   private formatTime(timeInSeconds: number): string {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -61,6 +64,4 @@ export class TimerComponent implements OnInit, OnDestroy {
   private padTime(time: number): string {
     return time < 10 ? `0${time}` : `${time}`;
   }
-
-  
 }

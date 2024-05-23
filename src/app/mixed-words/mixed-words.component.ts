@@ -98,8 +98,8 @@ export class MixedWordsComponent implements OnInit {
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.gamePoints,
         idGame: 0,
-        secondsLeftInGame: 0,
-        secondsPlayed: 0
+        secondsLeftInGame: this.timerComponent.getTimeLeft(),
+        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft()
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
       this.endGame = true;
@@ -141,11 +141,18 @@ export class MixedWordsComponent implements OnInit {
     return grade;
   }
   handleTimeUp(): void {
-    // Implement actions when time is up (e.g., end game logic)
-    // For example:
     this.endGame = true;
-    // Additional logic as needed
+    const game: GamePlayed = {
+      date: new Date(),
+      idCategory: parseInt(this.idCategory),
+      numOfPoints: this.gamePoints,
+      idGame: 0,
+      secondsLeftInGame: 0,
+      secondsPlayed: this.gameDuration
+    };
+    this.gamePlayerDifficultyService.addGamePlayed(game);
   }
+
   handleTimeLeftReport(timeLeft: number): void {
     this.displayTimeLeft = this.formatTime(timeLeft);
   }

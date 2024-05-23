@@ -3,36 +3,63 @@
   <mat-card class="cards">
     <mat-card-content>
       <p>
-        {{ gamePlayerList.length }}
-        <br />
         Games
+        <br /><br />
+        {{ gamePlayerList.length }}
       </p>
     </mat-card-content>
   </mat-card>
   <mat-card class="cards">
     <mat-card-content>
       <p>
-        {{ totalNumOfPoints }}
-        <br />
         Points
+        <br /><br />
+        {{ totalNumOfPoints }}
       </p>
     </mat-card-content>
   </mat-card>
   <mat-card class="cards">
     <mat-card-content>
       <p>
-        {{ numberOfLearnedCategories }}
-        <br />
         Learned Categories
+        <br /><br />
+        {{ numberOfLearnedCategories }}
       </p>
     </mat-card-content>
   </mat-card>
   <mat-card class="cards">
     <mat-card-content>
       <p>
-        {{ numberOfUnlearnedCategories }}
-        <br />
         Unlearned Categories
+        <br /><br />
+        {{ numberOfUnlearnedCategories }}
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="cards">
+    <mat-card-content>
+      <p>
+        Total Playtime Per Secend
+        <br /><br />
+        {{ totalPlayedTime | number:'1.0-2' }} Secend
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="cards">
+    <mat-card-content>
+      <p>
+        Average Game Time Per Secend
+        <br /><br />
+        {{ averageGameTime | number:'1.0-2' }} Secend
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="cards">
+    <mat-card-content>
+      <p>
+        Games Finished On Time
+        <br /><br />
+        {{ gamesFinishedOnTimePercent | number:'1.0-0' }}%
       </p>
     </mat-card-content>
   </mat-card>

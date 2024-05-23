@@ -59,7 +59,6 @@ export class WordSorterGameComponent implements OnInit {
   displayTimeLeft: string = ''; 
 
   @ViewChild(TimerComponent) timerComponent!: TimerComponent;
-  
 
   constructor(
     private categoriesService: CategoriesService,
@@ -94,6 +93,7 @@ export class WordSorterGameComponent implements OnInit {
     this.timerComponent.resetTimer();
     setTimeout(() => this.timerComponent.startTimer(), 100);
   }
+
   exit() {
     this.dialog.open(ExitGameComponent);
   }
@@ -101,8 +101,6 @@ export class WordSorterGameComponent implements OnInit {
   startGame(): void {
     const categories = this.categoriesService.list();
 
-    /*  this.currentCategory =
-      categories[Math.floor(Math.random() * categories.length)]; */
     this.otherCategory =
       categories[Math.floor(Math.random() * categories.length)];
     if (this.currentCategory) {
@@ -142,15 +140,17 @@ export class WordSorterGameComponent implements OnInit {
         date: new Date(),
         idCategory: parseInt(this.idCategory),
         numOfPoints: this.score,
-        secondsLeftInGame: 0,
-        secondsPlayed: 0
+        secondsLeftInGame: this.timerComponent.getTimeLeft(),
+        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft()
       };
       this.gamePlayerDifficultyService.addGamePlayed(game);
     }
   }
+
   getScore() {
     return Math.floor(100 * (this.score / 6));
   }
+
   checkAnswer(isCorrect: boolean): void {
     if (!this.currentCategory || !this.currentWord) return;
     isCorrect
@@ -176,10 +176,11 @@ export class WordSorterGameComponent implements OnInit {
       data: isSuccess,
     });
   }
+
   progressValue(): number {
-    return (this.currentWordIndex ) / this.wordsToGuess.length * 100;
+    return (this.currentWordIndex) / this.wordsToGuess.length * 100;
   }
-  
+
   restartGame(): void {
     this.currentWordIndex = -1;
     this.score = 0;
@@ -188,10 +189,18 @@ export class WordSorterGameComponent implements OnInit {
     this.guesses = [];
     this.startGame();
   }
-  
+
   handleTimeUp(): void {
     this.gameOver = true;
     this.showDialog(false);
+    const game: GamePlayed = {
+      date: new Date(),
+      idCategory: parseInt(this.idCategory),
+      numOfPoints: this.score,
+      secondsLeftInGame: 0,
+      secondsPlayed: this.gameDuration
+    };
+    this.gamePlayerDifficultyService.addGamePlayed(game);
   }
 
   handleTimeLeftReport(timeLeft: number): void {

@@ -3,11 +3,12 @@ import { MatCardModule } from '@angular/material/card';
 import { GamePlayerDifficultyService } from '../services/game-player-difficulty.service';
 import { GamePlayed } from '../../shared/model/game-Played';
 import { CategoriesService } from '../services/categories.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatCardModule],
+  imports: [MatCardModule, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -17,6 +18,9 @@ export class DashboardComponent implements OnInit {
   numberOfLearnedCategories = 0;
   numberOfUnlearnedCategories = 0;
   totalCategories = 0;
+  totalPlayedTime = 0;
+  averageGameTime = 0;
+  gamesFinishedOnTimePercent = 0;
 
   constructor(
     private gamePlayerDifficultyService: GamePlayerDifficultyService,
@@ -40,5 +44,9 @@ export class DashboardComponent implements OnInit {
       this.gamePlayerDifficultyService.getNumberOfUnlearnedCategories(
         this.totalCategories
       );
+
+    this.totalPlayedTime = this.gamePlayerDifficultyService.getTotalPlaytime();
+    this.averageGameTime = this.gamePlayerDifficultyService.getAverageGameTime();
+    this.gamesFinishedOnTimePercent = this.gamePlayerDifficultyService.getGamesFinishedOnTimePercent();
   }
 }
