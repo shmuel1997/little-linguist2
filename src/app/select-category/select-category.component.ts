@@ -37,7 +37,7 @@ export class SelectCategoryComponent {
   }
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
-    this.categories = this.categoriesService.list();
+     this.categoriesService.list().then(res=>this.categories =res);
   }
 
   getInfoDate(category: Category) {

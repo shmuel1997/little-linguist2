@@ -68,7 +68,8 @@ export class WordSorterGameComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const categories = this.categoriesService.list();
+    let categories:Category[]=[]
+     this.categoriesService.list().then(res=> {categories =res});
     const validCategories = categories.filter(
       (category) => category.words.length >= 3
     );
@@ -99,7 +100,8 @@ export class WordSorterGameComponent implements OnInit {
   }
 
   startGame(): void {
-    const categories = this.categoriesService.list();
+    let categories:Category[]=[]
+    this.categoriesService.list().then(res=> {categories =res});
 
     this.otherCategory =
       categories[Math.floor(Math.random() * categories.length)];

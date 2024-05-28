@@ -38,7 +38,9 @@ export class DashboardComponent implements OnInit {
     this.numberOfLearnedCategories =
       this.gamePlayerDifficultyService.getNumberOfLearnedCategories();
 
-    this.totalCategories = this.categoriesService.list().length;
+    this.categoriesService
+      .list()
+      .then((res) => (this.totalCategories = res.length));
 
     this.numberOfUnlearnedCategories =
       this.gamePlayerDifficultyService.getNumberOfUnlearnedCategories(
@@ -46,7 +48,9 @@ export class DashboardComponent implements OnInit {
       );
 
     this.totalPlayedTime = this.gamePlayerDifficultyService.getTotalPlaytime();
-    this.averageGameTime = this.gamePlayerDifficultyService.getAverageGameTime();
-    this.gamesFinishedOnTimePercent = this.gamePlayerDifficultyService.getGamesFinishedOnTimePercent();
+    this.averageGameTime =
+      this.gamePlayerDifficultyService.getAverageGameTime();
+    this.gamesFinishedOnTimePercent =
+      this.gamePlayerDifficultyService.getGamesFinishedOnTimePercent();
   }
 }

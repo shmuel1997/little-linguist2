@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Category } from '../../shared/model/category';
+import {
+  DocumentData,
+  DocumentSnapshot,
+  Firestore,
+  QuerySnapshot,
+  collection,
+  getDocs,
+} from '@angular/fire/firestore';
+import { categoryConverter } from './converters/category.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +17,15 @@ export class CategoriesService {
   [x: string]: unknown;
   private readonly CATEGORIES_KEY = 'categories';
   private readonly NEXT_ID_KEY = 'nextId';
-
+  /**
+   *
+   */
+  constructor(private firestoreService: Firestore) {}
   private getCategories(): Map<number, Category> {
+    /*   const collectionConnection = collection(
+      this.firestoreService,
+      'people'
+      ); */
     const categoriesString = localStorage.getItem(this.CATEGORIES_KEY);
 
     if (!categoriesString) {
@@ -33,8 +49,22 @@ export class CategoriesService {
     localStorage.setItem(this.NEXT_ID_KEY, id.toString());
   }
 
-  list(): Category[] {
-    return Array.from(this.getCategories().values());
+  async list(): Promise<Category[]> {
+    const collectionConnection = collection(
+      this.firestoreService,
+      'categories'
+    ).withConverter(categoryConverter);
+    const querySnapshot: QuerySnapshot<Category> = await getDocs(
+      collectionConnection
+    );
+    const result: Category[] = [];
+    querySnapshot.docs.forEach((docSnap: DocumentSnapshot<Category>) => {
+      const data = docSnap.data();
+      if (data) {
+        result.push(data);
+      }
+    });
+    return result;
   }
 
   get(id: number): Category | undefined {

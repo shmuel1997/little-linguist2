@@ -38,7 +38,7 @@ export class CategoriesListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dataSource = this.categoriesService.list();
+     this.categoriesService.list().then(res=>{this.dataSource =res});
   }
 
   deleteCategory(id: number, name: string) {
@@ -49,7 +49,7 @@ export class CategoriesListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.categoriesService.delete(id);
-        this.dataSource = this.categoriesService.list();
+       this.categoriesService.list().then(res=> this.dataSource = res);
       }
     });
   }
