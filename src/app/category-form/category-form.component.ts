@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslatedWord } from '../../shared/model/translated-word';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-category-form',
@@ -23,17 +24,18 @@ import { TranslatedWord } from '../../shared/model/translated-word';
     MatButtonModule,
     MatIconModule,
     MatTableModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './category-form.component.html',
   styleUrl: './category-form.component.css',
 })
 export class CategoryFormComponent implements OnInit {
-  currentCategory = new Category(0, '', Language.English, Language.Hebrew);
+  currentCategory = new Category('', '', Language.English, Language.Hebrew);
   displayedColumns: string[] = ['Origin', 'Target', 'Actions'];
 
   @Input()
   id?: string;
-
+  isLoading=false;
   @ViewChild('wordsGroup') wordsGroup?: NgModelGroup;
 
   constructor(
@@ -42,12 +44,17 @@ export class CategoryFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    
     if (this.id) {
-      const categoryData = this.categoriesService.get(parseInt(this.id));
-
-      if (categoryData) {
-        this.currentCategory = categoryData;
-      }
+   this.isLoading = true;
+      let categoryData;
+      this.categoriesService.get(this.id).then((res) => {
+        categoryData = res;
+        if (categoryData) {
+          this.currentCategory = categoryData;
+        }
+        this.isLoading = false;
+      });
     }
   }
 
@@ -65,11 +72,11 @@ export class CategoryFormComponent implements OnInit {
     this.wordsGroup!.control.markAsDirty();
   }
 
-  saveCategory() {
+  async saveCategory() {
     if (this.id) {
-      this.categoriesService.update(this.currentCategory);
+      await this.categoriesService.update(this.currentCategory);
     } else {
-      this.categoriesService.add(this.currentCategory);
+     await this.categoriesService.add(this.currentCategory);
     }
 
     this.router.navigate(['']);

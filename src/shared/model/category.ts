@@ -6,7 +6,7 @@ export class Category {
   words: TranslatedWord[] = [];
 
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
     public origin: Language,
     public target: Language

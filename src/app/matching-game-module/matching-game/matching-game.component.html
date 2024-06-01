@@ -1,6 +1,12 @@
 <mat-icon class="exit" (click)="exit()">exit_to_app</mat-icon>
 <h1>Matching Game -{{ category?.name }}</h1>
-<div *ngIf="!endGame" class="error-word">
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="errorWords">
+  <p>{{ errorWords }}</p>
+</div>
+<div *ngIf="!endGame&&!isLoading&&!errorWords" class="error-word">
   <div class="timer-container" style="justify-content: flex-end">
     <mat-icon>alarm</mat-icon>
     <app-timer
@@ -10,9 +16,7 @@
     >
     </app-timer>
   </div>
-  <div *ngIf="errorWords">
-    <p>{{ errorWords }}</p>
-  </div>
+ 
   <div class="matching-game" *ngIf="!errorWords">
     <div>
       <app-display-word

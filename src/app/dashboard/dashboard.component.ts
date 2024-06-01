@@ -4,11 +4,12 @@ import { GamePlayerDifficultyService } from '../services/game-player-difficulty.
 import { GamePlayed } from '../../shared/model/game-Played';
 import { CategoriesService } from '../services/categories.service';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatCardModule, CommonModule],
+  imports: [MatCardModule, CommonModule, MatProgressSpinnerModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -21,36 +22,35 @@ export class DashboardComponent implements OnInit {
   totalPlayedTime = 0;
   averageGameTime = 0;
   gamesFinishedOnTimePercent = 0;
-
+  isLoading = true;
   constructor(
     private gamePlayerDifficultyService: GamePlayerDifficultyService,
     private categoriesService: CategoriesService
   ) {}
 
   ngOnInit() {
-    this.gamePlayerList = this.gamePlayerDifficultyService.list();
-
-    this.totalNumOfPoints = this.gamePlayerList.reduce(
-      (acc, game) => acc + game.numOfPoints,
-      0
-    );
-
-    this.numberOfLearnedCategories =
-      this.gamePlayerDifficultyService.getNumberOfLearnedCategories();
-
-    this.categoriesService
-      .list()
-      .then((res) => (this.totalCategories = res.length));
-
-    this.numberOfUnlearnedCategories =
-      this.gamePlayerDifficultyService.getNumberOfUnlearnedCategories(
-        this.totalCategories
+    this.gamePlayerDifficultyService.list().then(async (res) => {
+      this.gamePlayerList = res;
+      this.totalNumOfPoints = this.gamePlayerList.reduce(
+        (acc, game) => acc + game.numOfPoints,
+        0
       );
+      this.numberOfLearnedCategories =
+        await this.gamePlayerDifficultyService.getNumberOfLearnedCategories();
+      this.totalCategories = (await this.categoriesService.list()).length;
+      this.numberOfUnlearnedCategories =
+        await this.gamePlayerDifficultyService.getNumberOfUnlearnedCategories(
+          this.totalCategories
+        );
 
-    this.totalPlayedTime = this.gamePlayerDifficultyService.getTotalPlaytime();
-    this.averageGameTime =
-      this.gamePlayerDifficultyService.getAverageGameTime();
-    this.gamesFinishedOnTimePercent =
-      this.gamePlayerDifficultyService.getGamesFinishedOnTimePercent();
+      this.totalPlayedTime =
+        await this.gamePlayerDifficultyService.getTotalPlaytime();
+
+      this.averageGameTime =
+        await this.gamePlayerDifficultyService.getAverageGameTime();
+      this.gamesFinishedOnTimePercent =
+        await this.gamePlayerDifficultyService.getGamesFinishedOnTimePercent();
+        this.isLoading=false;
+    });
   }
 }

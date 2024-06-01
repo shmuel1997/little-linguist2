@@ -8,6 +8,7 @@ import { Category } from '../../shared/model/category';
 import { CategoriesService } from '../services/categories.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-category-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-categories-list',
@@ -18,6 +19,7 @@ import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-
     MatIconModule,
     MatButtonModule,
     RouterModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.css',
@@ -31,24 +33,27 @@ export class CategoriesListComponent implements OnInit {
     'actions',
   ];
   dataSource: Category[] = [];
-
+  isLoading=true;
   constructor(
     private categoriesService: CategoriesService,
     private dialogService: MatDialog
   ) {}
 
   ngOnInit(): void {
-     this.categoriesService.list().then(res=>{this.dataSource =res});
+     this.categoriesService.list().then(res=>{
+      this.dataSource =res;
+      this.isLoading=false
+    });
   }
 
-  deleteCategory(id: number, name: string) {
+  deleteCategory(id: string, name: string) {
     const dialogRef = this.dialogService.open(DeleteCategoryDialogComponent, {
       data: name,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-        this.categoriesService.delete(id);
+       await this.categoriesService.delete(id);
        this.categoriesService.list().then(res=> this.dataSource = res);
       }
     });

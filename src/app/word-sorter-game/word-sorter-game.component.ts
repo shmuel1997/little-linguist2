@@ -19,6 +19,7 @@ import { TranslatedWord } from '../../shared/model/translated-word';
 import { TimerComponent } from '../timer/timer.component';
 import { GameManagerService } from '../services/game-manager.service';
 import { GameDifficulty } from '../../shared/model/game-Difficulty.enum';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-word-sorter-game',
@@ -39,6 +40,7 @@ import { GameDifficulty } from '../../shared/model/game-Difficulty.enum';
     ExitGameComponent,
     MatDialogModule,
     TimerComponent,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './word-sorter-game.component.html',
   styleUrls: ['./word-sorter-game.component.css'],
@@ -55,9 +57,9 @@ export class WordSorterGameComponent implements OnInit {
   progress: unknown;
   guesses: boolean[] = [];
   errorWords: string = '';
-  gameDuration: number = 0; 
-  displayTimeLeft: string = ''; 
-
+  gameDuration: number = 0;
+  displayTimeLeft: string = '';
+  isLoading = true;
   @ViewChild(TimerComponent) timerComponent!: TimerComponent;
 
   constructor(
@@ -68,31 +70,38 @@ export class WordSorterGameComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let categories:Category[]=[]
-     this.categoriesService.list().then(res=> {categories =res});
-    const validCategories = categories.filter(
-      (category) => category.words.length >= 3
-    );
+    let categories: Category[] = [];
+    this.categoriesService.list().then((res) => {
+      categories = res;
+      const validCategories = categories.filter(
+        (category) => category.words.length >= 3
+      );
 
-    if (validCategories.length < 2) {
-      this.errorWords =
-        'At least two categories with at least three words each are required to play repeat Please add words and categories.';
-      return;
-    }
 
-    this.currentCategory =
-      validCategories[Math.floor(Math.random() * validCategories.length)];
-    this.otherCategory =
-      validCategories[Math.floor(Math.random() * validCategories.length)];
-    while (this.currentCategory.id === this.otherCategory.id) {
+      if (validCategories.length < 2) {
+        this.isLoading=false;
+        this.errorWords =
+          'At least two categories with at least three words each are required to play repeat Please add words and categories.';
+        return;
+      }
+
+      this.currentCategory =
+        validCategories[Math.floor(Math.random() * validCategories.length)];
       this.otherCategory =
         validCategories[Math.floor(Math.random() * validCategories.length)];
-    }
+      while (this.currentCategory.id === this.otherCategory.id) {
+        this.otherCategory =
+          validCategories[Math.floor(Math.random() * validCategories.length)];
+      }
 
-    this.startGame();
-    this.gameDuration = this.gameManagerService.getGameDuration(GameDifficulty.MEDIUM); 
-    this.timerComponent.resetTimer();
-    setTimeout(() => this.timerComponent.startTimer(), 100);
+      this.startGame();
+      this.gameDuration = this.gameManagerService.getGameDuration(
+        GameDifficulty.MEDIUM
+      );
+      this.timerComponent?.resetTimer();
+      setTimeout(() => this.timerComponent?.startTimer(), 100);
+      this.isLoading = false;
+    });
   }
 
   exit() {
@@ -100,10 +109,11 @@ export class WordSorterGameComponent implements OnInit {
   }
 
   startGame(): void {
-    let categories:Category[]=[]
-    this.categoriesService.list().then(res=> {categories =res});
-
-    this.otherCategory =
+    
+    let categories: Category[] = [];
+    this.categoriesService.list().then((res) => {
+      categories = res;
+      this.otherCategory =
       categories[Math.floor(Math.random() * categories.length)];
     if (this.currentCategory) {
       for (let i = 0; i < 3; i++) {
@@ -131,21 +141,24 @@ export class WordSorterGameComponent implements OnInit {
       });
       this.nextWord();
     }
+    });
+
+   
   }
 
-  nextWord(): void {
+  async nextWord(): Promise<void> {
     if (this.currentWordIndex < this.wordsToGuess.length - 1) {
       this.currentWord = this.wordsToGuess[++this.currentWordIndex].origin;
     } else {
       this.gameOver = true;
       const game: GamePlayed = {
         date: new Date(),
-        idCategory: parseInt(this.idCategory),
+        idCategory: this.idCategory,
         numOfPoints: this.score,
         secondsLeftInGame: this.timerComponent.getTimeLeft(),
-        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft()
+        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft(),
       };
-      this.gamePlayerDifficultyService.addGamePlayed(game);
+      await this.gamePlayerDifficultyService.addGamePlayed(game);
     }
   }
 
@@ -180,7 +193,7 @@ export class WordSorterGameComponent implements OnInit {
   }
 
   progressValue(): number {
-    return (this.currentWordIndex) / this.wordsToGuess.length * 100;
+    return (this.currentWordIndex / this.wordsToGuess.length) * 100;
   }
 
   restartGame(): void {
@@ -189,20 +202,22 @@ export class WordSorterGameComponent implements OnInit {
     this.wordsToGuess = [];
     this.gameOver = false;
     this.guesses = [];
+    this.isLoading=true;
     this.startGame();
+    this.isLoading=false;
   }
 
-  handleTimeUp(): void {
+  async handleTimeUp(): Promise<void> {
     this.gameOver = true;
     this.showDialog(false);
     const game: GamePlayed = {
       date: new Date(),
-      idCategory: parseInt(this.idCategory),
+      idCategory: this.idCategory,
       numOfPoints: this.score,
       secondsLeftInGame: 0,
-      secondsPlayed: this.gameDuration
+      secondsPlayed: this.gameDuration,
     };
-    this.gamePlayerDifficultyService.addGamePlayed(game);
+    await this.gamePlayerDifficultyService.addGamePlayed(game);
   }
 
   handleTimeLeftReport(timeLeft: number): void {

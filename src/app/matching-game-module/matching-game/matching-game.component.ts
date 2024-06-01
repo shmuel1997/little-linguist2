@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TimerComponent } from '../../timer/timer.component';
 import { GameManagerService } from '../../services/game-manager.service';
 import { GameDifficulty } from '../../../shared/model/game-Difficulty.enum';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-matching-game',
@@ -29,6 +30,7 @@ import { GameDifficulty } from '../../../shared/model/game-Difficulty.enum';
     MatButtonModule,
     TimerComponent,
     MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './matching-game.component.html',
   styleUrl: './matching-game.component.css',
@@ -46,9 +48,9 @@ export class MatchingGameComponent {
   gamePoints: number = 16;
   category: Category | undefined;
   errorWords: string | undefined;
-  gameDuration: number = 0; 
-  displayTimeLeft: string = ''; 
-
+  gameDuration: number = 0;
+  displayTimeLeft: string = '';
+  isLoading = true;
   @ViewChild(TimerComponent) timerComponent!: TimerComponent;
 
   constructor(
@@ -57,23 +59,30 @@ export class MatchingGameComponent {
     private gamePlayerDifficultyService: GamePlayerDifficultyService,
     private gameManagerService: GameManagerService
   ) {}
-  ngOnInit() {
-    this.startNewGame();
-    this.category = this.categoryService.get(parseInt(this.idCategory));
-    this.words = this.category?.words;
-    if (this.words && this.words?.length < 5)
-      this.errorWords =
-        'To use this game, a category must contain a minimum of five words';
-    else this.errorWords = undefined;
-    const wordsSort = this.words
-      ? this.words?.sort(() => Math.random() - 0.5)
-      : [];
-    this.wordsToDisplay = wordsSort?.slice(0, 5);
-    this.wordsToDisplayTarget = [...this.wordsToDisplay]?.sort(
-      () => Math.random() - 0.5
-    );
-    this.resetWordStatusOrigin();
-    this.resetWordStatusTarget();
+  async ngOnInit() {
+    await this.startNewGame();
+    if (this.errorWords) {
+      this.isLoading = false;
+      return;
+    }
+    this.categoryService.get(this.idCategory).then((res) => {
+      this.category = res;
+      this.words = this.category?.words;
+      if (this.words && this.words?.length < 5)
+        this.errorWords =
+          'To use this game, a category must contain a minimum of five words';
+      else this.errorWords = undefined;
+      const wordsSort = this.words
+        ? this.words?.sort(() => Math.random() - 0.5)
+        : [];
+      this.wordsToDisplay = wordsSort?.slice(0, 5);
+      this.wordsToDisplayTarget = [...this.wordsToDisplay]?.sort(
+        () => Math.random() - 0.5
+      );
+      this.resetWordStatusOrigin();
+      this.resetWordStatusTarget();
+      this.isLoading = false;
+    });
   }
   resetWordStatusTarget() {
     for (let i = 0; i < this.wordStatusTarget.length; i++) {
@@ -155,7 +164,7 @@ export class MatchingGameComponent {
       }
     });
   }
-  checkEndGame() {
+  async checkEndGame() {
     this.endGame = true;
     for (let i = 0; i < this.wordStatusOrigin.length; i++) {
       if (this.wordStatusOrigin[i] != WordStatus.Disabled) this.endGame = false;
@@ -163,13 +172,12 @@ export class MatchingGameComponent {
     if (this.endGame) {
       const game: GamePlayed = {
         date: new Date(),
-        idCategory: parseInt(this.idCategory),
+        idCategory: this.idCategory,
         numOfPoints: this.gamePoints,
-        idGame: 0,
         secondsLeftInGame: this.timerComponent.getTimeLeft(),
-        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft()
+        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft(),
       };
-      this.gamePlayerDifficultyService.addGamePlayed(game);
+      await this.gamePlayerDifficultyService.addGamePlayed(game);
     }
   }
   checkSelected(trigger: string) {
@@ -185,37 +193,43 @@ export class MatchingGameComponent {
   exit() {
     this.dialogService.open(ExitGameComponent);
   }
-  startNewGame() {
-    this.category = this.categoryService.get(parseInt(this.idCategory));
+  async startNewGame() {
+    this.category = await this.categoryService.get(this.idCategory);
     this.words = this.category?.words;
     if (this.words && this.words.length < 5) {
-      this.errorWords = 'To use this game, a category must contain a minimum of five words';
+      this.errorWords =
+        'To use this game, a category must contain a minimum of five words';
     } else {
       this.errorWords = undefined;
-      const wordsSort = this.words ? [...this.words].sort(() => Math.random() - 0.5) : [];
+      const wordsSort = this.words
+        ? [...this.words].sort(() => Math.random() - 0.5)
+        : [];
       this.wordsToDisplay = wordsSort.slice(0, 5);
-      this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(() => Math.random() - 0.5);
+      this.wordsToDisplayTarget = [...this.wordsToDisplay].sort(
+        () => Math.random() - 0.5
+      );
       this.wordStatusOrigin.fill(WordStatus.Normal);
       this.wordStatusTarget.fill(WordStatus.Normal);
       this.endGame = false;
       this.tryCount = 0;
       this.gamePoints = 16;
-      this.gameDuration = this.gameManagerService.getGameDuration(GameDifficulty.EASY); 
-      this.timerComponent.resetTimer(); 
-      setTimeout(() => this.timerComponent.startTimer(), 100);
+      this.gameDuration = this.gameManagerService.getGameDuration(
+        GameDifficulty.EASY
+      );
+      this.timerComponent?.resetTimer();
+      setTimeout(() => this.timerComponent?.startTimer(), 100);
     }
   }
-  handleTimeUp(): void {
+  async handleTimeUp(): Promise<void> {
     this.endGame = true;
     const game: GamePlayed = {
       date: new Date(),
-      idCategory: parseInt(this.idCategory),
+      idCategory: this.idCategory,
       numOfPoints: this.gamePoints,
-      idGame: 0,
       secondsLeftInGame: 0,
-      secondsPlayed: this.gameDuration
+      secondsPlayed: this.gameDuration,
     };
-    this.gamePlayerDifficultyService.addGamePlayed(game);
+    await this.gamePlayerDifficultyService.addGamePlayed(game);
   }
 
   handleTimeLeftReport(timeLeft: number): void {
@@ -226,7 +240,7 @@ export class MatchingGameComponent {
     const minutes = Math.floor(seconds / 60);
     const secondsLeft = seconds % 60;
     return `${minutes}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`;
-  }  
+  }
   private padTime(time: number): string {
     return time < 10 ? `0${time}` : `${time}`;
   }

@@ -1,21 +1,21 @@
 export class GamePlayed {
-  idCategory: number;
-  idGame?: number;
+  idCategory: string;
+  id?: string;
   date: Date;
   numOfPoints: number;
   secondsPlayed: number; 
   secondsLeftInGame: number; 
 
   constructor(
-    idCategory: number,
-    idGame: number,
+    idCategory: string,
+    id: string,
     date: Date,
     numOfPoints: number,
     secondsPlayed: number,
     secondsLeftInGame: number
   ) {
     this.idCategory = idCategory;
-    this.idGame = idGame;
+    this.id = id;
     this.date = date;
     this.numOfPoints = numOfPoints;
     this.secondsPlayed = secondsPlayed;

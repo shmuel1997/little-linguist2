@@ -1,5 +1,8 @@
 <h1>Let's Play</h1>
-<div class="cards-container">
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!isLoading" class="cards-container">
   <mat-card
     (click)="openSelectGame(category)"
     *ngFor="let category of categories"

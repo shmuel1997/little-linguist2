@@ -1,4 +1,7 @@
-<form #categoryForm="ngForm" (ngSubmit)="saveCategory()">
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<form *ngIf="!isLoading" #categoryForm="ngForm" (ngSubmit)="saveCategory()">
   <h2>Category Details:</h2>
   <div>
     <mat-form-field>

@@ -1,8 +1,11 @@
 <mat-icon (click)="exit()" class="exit">exit_to_app</mat-icon>
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
 <div *ngIf="errorWords" class="alert alert-danger">
   {{ errorWords }}
 </div>
-<div class="content" *ngIf="currentCategory && !gameOver">
+<div class="content" *ngIf="currentCategory && !gameOver&&!isLoading">
   <div class="timer-container">
     <mat-icon>alarm</mat-icon>
     <app-timer

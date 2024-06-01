@@ -17,6 +17,7 @@ import { GamePlayed } from '../../shared/model/game-Played';
 import { GameManagerService } from '../services/game-manager.service';
 import { GameDifficulty } from '../../shared/model/game-Difficulty.enum';
 import { TimerComponent } from '../timer/timer.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-mixed-words',
@@ -32,11 +33,13 @@ import { TimerComponent } from '../timer/timer.component';
     MatProgressBarModule,
     NgFor,
     TimerComponent,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './mixed-words.component.html',
   styleUrl: './mixed-words.component.css',
 })
 export class MixedWordsComponent implements OnInit {
+  isLoading = true;
   @Input() idCategory: string = '';
   category: Category | undefined;
   words?: TranslatedWord[];
@@ -47,7 +50,7 @@ export class MixedWordsComponent implements OnInit {
   tryCount: number = 0;
   gamePoints: number = 16;
   grade: number = 0;
-  gameDuration: number = 0; 
+  gameDuration: number = 0;
   displayTimeLeft: string = '';
 
   @ViewChild(TimerComponent) timerComponent!: TimerComponent;
@@ -61,7 +64,9 @@ export class MixedWordsComponent implements OnInit {
 
   ngOnInit() {
     this.startNewGame();
-    this.gameDuration = this.gameManagerService.getGameDuration(GameDifficulty.HARD); 
+    this.gameDuration = this.gameManagerService.getGameDuration(
+      GameDifficulty.HARD
+    );
   }
 
   nextWord() {
@@ -81,9 +86,11 @@ export class MixedWordsComponent implements OnInit {
     this.tryCount++;
     const currentWord = this.words && this.words[this.index];
     const isSuccess = currentWord?.['guess'] === currentWord?.['origin'];
-    this.dialogService.open(DialogMatchGameComponent, {
-      data: isSuccess,
-    });
+    const isEndOfGame = this.index + 1 === this.words?.length;
+    if (!isEndOfGame)
+      this.dialogService.open(DialogMatchGameComponent, {
+        data: isSuccess,
+      });
 
     if (isSuccess) {
       this.numSuccess++;
@@ -91,18 +98,17 @@ export class MixedWordsComponent implements OnInit {
       this.gamePoints -= 2;
     }
 
-    const isEndOfGame = this.index + 1 === this.words?.length;
     if (isEndOfGame) {
       const game: GamePlayed = {
         date: new Date(),
-        idCategory: parseInt(this.idCategory),
+        idCategory: this.idCategory,
         numOfPoints: this.gamePoints,
-        idGame: 0,
         secondsLeftInGame: this.timerComponent.getTimeLeft(),
-        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft()
+        secondsPlayed: this.gameDuration - this.timerComponent.getTimeLeft(),
       };
-      this.gamePlayerDifficultyService.addGamePlayed(game);
-      this.endGame = true;
+      this.gamePlayerDifficultyService.addGamePlayed(game).then(() => {
+        this.endGame = true;
+      });
     } else {
       this.nextWord();
       this.reset();
@@ -122,17 +128,21 @@ export class MixedWordsComponent implements OnInit {
   }
 
   startNewGame() {
+    this.isLoading=true;
     this.index = -1;
     this.numSuccess = 0;
     this.endGame = false;
     this.tryCount = 0;
     this.gamePoints = 16;
-    this.category = this.categoryService.get(parseInt(this.idCategory));
-    this.words = this.category?.['words'];
-    this.words?.forEach((word) => {
-      word.guess = '';
+    this.categoryService.get(this.idCategory).then((res) => {
+      this.category = res;
+      this.words = this.category?.['words'];
+      this.words?.forEach((word) => {
+        word.guess = '';
+      });
+      this.nextWord();
+      this.isLoading = false;
     });
-    this.nextWord();
   }
   calculateGrade(): number {
     const totalWords = this.words?.length || 0;
@@ -140,29 +150,28 @@ export class MixedWordsComponent implements OnInit {
     const grade = (correctAnswers / totalWords) * 100;
     return grade;
   }
-  handleTimeUp(): void {
+  async handleTimeUp(): Promise<void> {
     this.endGame = true;
     const game: GamePlayed = {
       date: new Date(),
-      idCategory: parseInt(this.idCategory),
+      idCategory: this.idCategory,
       numOfPoints: this.gamePoints,
-      idGame: 0,
       secondsLeftInGame: 0,
-      secondsPlayed: this.gameDuration
+      secondsPlayed: this.gameDuration,
     };
-    this.gamePlayerDifficultyService.addGamePlayed(game);
+    await this.gamePlayerDifficultyService.addGamePlayed(game);
   }
 
   handleTimeLeftReport(timeLeft: number): void {
     this.displayTimeLeft = this.formatTime(timeLeft);
   }
-  
+
   private formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const secondsLeft = seconds % 60;
     return `${minutes}:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`;
   }
-  
+
   private padTime(time: number): string {
     return time < 10 ? `0${time}` : `${time}`;
   }

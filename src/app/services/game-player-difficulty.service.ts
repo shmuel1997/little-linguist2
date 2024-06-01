@@ -1,73 +1,74 @@
 import { Injectable } from '@angular/core';
 import { GamePlayed } from '../../shared/model/game-Played';
+import { DocumentSnapshot, Firestore, QuerySnapshot, addDoc, collection, getDocs } from '@angular/fire/firestore';
+import { gamePlayedConverter } from './converters/gamePlayed.converter';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GamePlayerDifficultyService {
-  private readonly GAME_PLAYED_KEY = 'GamesPlayed';
-  private readonly NEXT_ID_KEY = 'nextIdGame';
+  
 
-  constructor() {}
+  constructor(private firestoreService:Firestore) {}
 
-  private getGamesPlayed(): GamePlayed[] {
-    const gamesPlayedString = localStorage.getItem(this.GAME_PLAYED_KEY);
-    return gamesPlayedString ? JSON.parse(gamesPlayedString) : [];
+
+  async list(): Promise<GamePlayed[]> {
+    const collectionConnection = collection(
+      this.firestoreService,
+      'gamesPlayed'
+    ).withConverter(gamePlayedConverter);
+    const querySnapshot: QuerySnapshot<GamePlayed> = await getDocs(
+      collectionConnection
+    );
+    const result: GamePlayed[] = [];
+    querySnapshot.docs.forEach((docSnap: DocumentSnapshot<GamePlayed>) => {
+      const data = docSnap.data();
+      if (data) {
+        result.push(data);
+      }
+    });
+    return result;
   }
 
-  list(): GamePlayed[] {
-    return this.getGamesPlayed();
+
+
+
+  async addGamePlayed(gamePlayed: GamePlayed): Promise<void> {
+    await addDoc(
+      collection(this.firestoreService, 'gamesPlayed').withConverter(
+        gamePlayedConverter 
+      ),
+      gamePlayed
+    );
   }
 
-  private getNextId(): number {
-    const nextIdString = localStorage.getItem(this.NEXT_ID_KEY);
-    return nextIdString ? parseInt(nextIdString, 10) : 1;
-  }
-
-  private setNextId(id: number): void {
-    localStorage.setItem(this.NEXT_ID_KEY, id.toString());
-  }
-
-  addGamePlayed(gamePlayed: GamePlayed): void {
-    const nextId = this.getNextId();
-    gamePlayed.idGame = nextId;
-    const gamesPlayed = this.getGamesPlayed();
-    gamesPlayed.push(gamePlayed);
-    this.setGamesPlayed(gamesPlayed);
-    this.setNextId(nextId + 1);
-  }
-
-  setGamesPlayed(gamesPlayed: GamePlayed[]): void {
-    localStorage.setItem(this.GAME_PLAYED_KEY, JSON.stringify(gamesPlayed));
-  }
-
-  getNumberOfLearnedCategories(): number {
-    const gamesPlayed = this.getGamesPlayed();
+  async getNumberOfLearnedCategories(): Promise<number> {
+    const gamesPlayed =await this.list();
     const learnedCategoryIds = new Set(
       gamesPlayed.map((game) => game.idCategory)
     );
     return learnedCategoryIds.size;
   }
 
-  getNumberOfUnlearnedCategories(totalCategories: number): number {
-    const numberOfLearnedCategories = this.getNumberOfLearnedCategories();
+  async getNumberOfUnlearnedCategories(totalCategories: number): Promise<number> {
+    const numberOfLearnedCategories =await this.getNumberOfLearnedCategories();
     return totalCategories - numberOfLearnedCategories;
   }
 
-  getTotalPlaytime(): number {
-    const games = this.getGamesPlayed();
+  async getTotalPlaytime(): Promise<number> {
+    const games =await this.list();
     return games.reduce((total, game) => total + game.secondsPlayed, 0);
   }
 
-  getAverageGameTime(): number {
-    const games = this.getGamesPlayed();
+  async getAverageGameTime(): Promise<number> {
+    const games =await this.list();
     return games.length > 0
-      ? this.getTotalPlaytime() / games.length
+      ?await this.getTotalPlaytime() / games.length
       : 0;
   }
 
-  getGamesFinishedOnTimePercent(): number {
-    const games = this.getGamesPlayed();
+  async getGamesFinishedOnTimePercent(): Promise<number> {
+    const games =await this.list();
     const gamesFinishedOnTime = games.filter(game => game.secondsLeftInGame > 0).length;
     return games.length > 0
       ? (gamesFinishedOnTime / games.length) * 100

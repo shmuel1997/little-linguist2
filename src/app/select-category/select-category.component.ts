@@ -8,6 +8,7 @@ import { Router, RouterModule } from '@angular/router';
 import { SelectGameComponent } from '../select-game/select-game.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-select-category',
@@ -19,17 +20,17 @@ import { MatIconModule } from '@angular/material/icon';
     RouterModule,
     MatIconModule,
     NgIf,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './select-category.component.html',
   styleUrl: './select-category.component.css',
 })
 export class SelectCategoryComponent {
   categories: Category[] = [];
-
+  isLoading = true;
   constructor(
     private categoriesService: CategoriesService,
-    private dialogService: MatDialog,
-    private routerService: Router
+    private dialogService: MatDialog
   ) {}
 
   openSelectGame(category: Category) {
@@ -37,7 +38,10 @@ export class SelectCategoryComponent {
   }
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
-     this.categoriesService.list().then(res=>this.categories =res);
+    this.categoriesService.list().then((res) => {
+      this.categories = res;
+      this.isLoading = false;
+    });
   }
 
   getInfoDate(category: Category) {

@@ -1,4 +1,7 @@
-<div *ngIf="!endGame && words">
+<div *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!endGame && words&&!isLoading">
   <mat-icon class="exit" (click)="exit()">exit_to_app</mat-icon>
   <form #mixGameForm="ngForm" (ngSubmit)="submit()">
     <div class="timer-container">
