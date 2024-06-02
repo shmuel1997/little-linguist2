@@ -35,22 +35,41 @@ export class DashboardComponent implements OnInit {
         (acc, game) => acc + game.numOfPoints,
         0
       );
-      this.numberOfLearnedCategories =
-        await this.gamePlayerDifficultyService.getNumberOfLearnedCategories();
-      this.totalCategories = (await this.categoriesService.list()).length;
-      this.numberOfUnlearnedCategories =
-        await this.gamePlayerDifficultyService.getNumberOfUnlearnedCategories(
-          this.totalCategories
-        );
 
-      this.totalPlayedTime =
-        await this.gamePlayerDifficultyService.getTotalPlaytime();
+      const categories = await this.categoriesService.list();
+      this.totalCategories = categories.length;
 
+      const validCategoryIds = new Set(
+        categories.map((category) => category.id)
+      );
+      const validGames = this.gamePlayerList.filter((game) =>
+        validCategoryIds.has(game.idCategory)
+      );
+
+      const learnedCategoryIds = new Set(
+        validGames.map((game) => game.idCategory)
+      );
+      this.numberOfLearnedCategories = learnedCategoryIds.size;
+
+      this.numberOfUnlearnedCategories = Math.max(
+        this.totalCategories - this.numberOfLearnedCategories,
+        0
+      );
+
+      this.totalPlayedTime = validGames.reduce(
+        (total, game) => total + game.secondsPlayed,
+        0
+      );
       this.averageGameTime =
-        await this.gamePlayerDifficultyService.getAverageGameTime();
+        validGames.length > 0 ? this.totalPlayedTime / validGames.length : 0;
       this.gamesFinishedOnTimePercent =
-        await this.gamePlayerDifficultyService.getGamesFinishedOnTimePercent();
-        this.isLoading=false;
+        validGames.length > 0
+          ? (validGames.filter((game) => game.secondsLeftInGame > 0).length /
+              validGames.length) *
+            100
+          : 0;
+
+      this.isLoading = false;
     });
   }
 }
